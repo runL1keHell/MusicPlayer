@@ -1,5 +1,5 @@
 import { Href } from "../../UI/Href/Href"
-import user from "../../../assets/images/user.svg"
+import { User } from "../../../assets/images/user.tsx"
 import { useNavigate } from "react-router-dom";
 
 export const Menu = () => {
@@ -12,7 +12,7 @@ export const Menu = () => {
                 className="mt-[30px] flex flex-col items-center justify-center"
                 onClick={() => navigate('/signin')}    
             >
-                <img src={user} alt="user" />
+                <User />
                 <Href name="Sign In / Sign Up" className="mt-[15px] text-[18px]" />
             </button>
             <div className="mt-[32px] flex flex-col">

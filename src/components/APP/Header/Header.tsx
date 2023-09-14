@@ -1,22 +1,22 @@
 import { SearchBar } from "../../UI/SearchBar/SearchBar"
-import logo from "../../../assets/images/logo.svg";
-import bell from "../../../assets/images/bell.svg";
-import player from "../../../assets/images/player-list-play.svg";
-import history from "../../../assets/images/time-history.svg";
-import star from "../../../assets/images/star.svg";
+import { Logo }  from "../../../assets/images/logo.tsx";
+import { Bell } from "../../../assets/images/bell.tsx";
+import { Player } from "../../../assets/images/playerListPlay.tsx";
+import { History } from "../../../assets/images/timeHistory.tsx";
+import { Star } from "../../../assets/images/star.tsx";
 import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
-    const buttonStyle = 'w-[24px] h-[24px] cursor-pointer'
+    const buttonStyle = 'w-[24px] h-[24px] cursor-pointer';
     const navigate = useNavigate();
     return (
         <header className="w-[76%] h-[81px] sticky flex justify-evenly items-center cursor-pointer">
-            <img src={logo} onClick={() => navigate('/')} className="w-[31px] h-[41px]" alt="icon" />
+            <Logo onClick={() => navigate('/')} className="w-[31px] h-[41px]" />
             <SearchBar className="" />
-            <img src={history} className={buttonStyle} alt="history" />
-            <img src={bell} className={buttonStyle} alt="bell" />
-            <img src={star} className={buttonStyle} alt="star" />
-            <img src={player} className={buttonStyle} alt="player" />
+            <History className={buttonStyle} />
+            <Bell className={buttonStyle} />
+            <Star className={buttonStyle} />
+            <Player className={buttonStyle} />
         </header>
     )
 }
