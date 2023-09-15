@@ -5,6 +5,7 @@ import {
 } from "react-router-dom"; 
 import { PrimaryLayout } from "./layout/PrimaryLayout/PrimaryLayout";
 import { Home } from "./pages/Home/Home";
+import { AuthLayout } from "./layout/AuthLayout/AuthLayout";
 
 function App() {
 
@@ -21,6 +22,9 @@ function App() {
         <Route path="/success" element={<Success />} />
         <Route path="/posts" element={<Posts />} />
         <Route path="/posts/:postId" element={<SinglePost />} /> */}
+
+      </Route>
+      <Route path="/auth" element={<AuthLayout />}>
 
       </Route>
       <Route path="*" element={ <h1>Sorry. Page wasn't found.</h1>} />
