@@ -10,9 +10,9 @@ export const Header = () => {
     const buttonStyle = 'w-[24px] h-[24px] cursor-pointer';
     const navigate = useNavigate();
     return (
-        <header className="w-[76%] h-[81px] sticky flex justify-evenly items-center cursor-pointer">
+        <header className="w-[76%] h-[81px] sticky shadow-md flex justify-evenly items-center cursor-pointer">
             <Logo onClick={() => navigate('/')} className="w-[31px] h-[41px]" />
-            <SearchBar className="" />
+            <SearchBar className="pl-[0px]" />
             <History className={buttonStyle} />
             <Bell className={buttonStyle} />
             <Star className={buttonStyle} />

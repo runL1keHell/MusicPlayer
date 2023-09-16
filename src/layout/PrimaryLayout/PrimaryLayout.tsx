@@ -6,12 +6,12 @@ import { Footer } from "../../components/APP/Footer/Footer"
 export const PrimaryLayout = () => {
     return (
         <>
-        <div className="flex">
-            <Menu />
-            <Header />
-        </div>
-            <Outlet/>
-        <Footer />
+            <div className="flex">
+                <Menu />
+                <Header />
+            </div>
+                <Outlet/>
+            <Footer />
         </>
     )
 }

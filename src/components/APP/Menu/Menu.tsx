@@ -10,9 +10,9 @@ export const Menu = () => {
         <nav className="w-[23%] h-[100vh] ml-[15px] border-r-[1px]  flex flex-col">
             <button 
                 className="mt-[30px] flex flex-col items-center justify-center"
-                onClick={() => navigate('/signin')}    
+                onClick={() => navigate('/auth')}    
             >
-                <User />
+                <User width="42" height="42" />
                 <Href name="Sign In / Sign Up" className="mt-[15px] text-[18px]" />
             </button>
             <div className="mt-[32px] flex flex-col">
