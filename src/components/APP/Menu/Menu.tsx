@@ -7,7 +7,7 @@ export const Menu = () => {
     const navigate = useNavigate();
 
     return (
-        <nav className="w-[23%] h-[100vh] ml-[15px] border-r-[1px]  flex flex-col">
+        <nav className="w-[23%] h-[100vh] ml-[15px] border-r-[1px] border-[#00000066] flex flex-col">
             <button 
                 className="mt-[30px] flex flex-col items-center justify-center"
                 onClick={() => navigate('/auth')}    

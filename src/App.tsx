@@ -16,23 +16,17 @@ function App() {
     <Routes>
       <Route path="/" element={<PrimaryLayout />}>
         <Route index element={<Home />} />
-        
-        {/* <Route path="/signup" element={<SignUp />} />
-        <Route path="/activate/:uid/:token" element={<Activation />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/registrationconfirmation" element={<RegistrationConfirmation />} />
-        <Route path="/success" element={<Success />} />
-        <Route path="/posts" element={<Posts />} />
-        <Route path="/posts/:postId" element={<SinglePost />} /> */}
-
       </Route>
+
       <Route path="/auth" element={<AuthLayout />}>
         <Route path="/auth/signup" element={<SignUp />} />
         <Route path="/auth/signin" element={<SignIn />} />
       </Route>
+      
       <Route path="*" element={ <h1>Sorry. Page wasn't found.</h1>} />
     </Routes>
-  </BrowserRouter>  )
+  </BrowserRouter>  
+  )
 }
 
 export default App
