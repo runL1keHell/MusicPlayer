@@ -6,7 +6,7 @@ import { Button } from "../../components/UI/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
 
-export const AuthLayout = () => {
+export const AuthLayout: React.FC = () => {
     const navigate = useNavigate();
 
     return (

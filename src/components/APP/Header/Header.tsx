@@ -5,12 +5,17 @@ import { Player } from "../../../assets/images/playerListPlay.tsx";
 import { History } from "../../../assets/images/timeHistory.tsx";
 import { Star } from "../../../assets/images/star.tsx";
 import { useNavigate } from "react-router-dom";
+import { MenuStatus } from "../../../layout/PrimaryLayout/PrimaryLayout.tsx";
 
-export const Header = () => {
+export const Header: React.FC<MenuStatus> = ({menuVisible}) => {
     const buttonStyle = 'w-[24px] h-[24px] cursor-pointer';
     const navigate = useNavigate();
     return (
-        <header className="w-[76%] h-[81px] sticky shadow-md flex justify-evenly items-center cursor-pointer">
+        <header className={`h-[81px] fixed z-10 top-0 right-0 shadow-md flex justify-evenly items-center cursor-pointer transition-all duration-300 ease-in-out' 
+        ${menuVisible ?
+        'w-[76%]  ' :  
+        'w-[94.9%]' }`}
+        >
             <Logo onClick={() => navigate('/')} className="w-[31px] h-[41px]" />
             <SearchBar className="pl-[0px]" />
             <History className={buttonStyle} />
