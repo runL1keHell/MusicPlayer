@@ -6,6 +6,8 @@ import { History } from "../../../assets/images/timeHistory.tsx";
 import { Star } from "../../../assets/images/star.tsx";
 import { useNavigate } from "react-router-dom";
 import { MenuStatus } from "../../../layout/PrimaryLayout/PrimaryLayout.tsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export const Header: React.FC<MenuStatus> = ({menuVisible}) => {
     const buttonStyle = 'w-[24px] h-[24px] cursor-pointer';
@@ -17,7 +19,14 @@ export const Header: React.FC<MenuStatus> = ({menuVisible}) => {
         'w-[94.9%]' }`}
         >
             <Logo onClick={() => navigate('/')} className="w-[31px] h-[41px]" />
-            <SearchBar className="pl-[0px]" />
+            <SearchBar 
+                innerIcon={<FontAwesomeIcon
+                    icon={faMagnifyingGlass} 
+                    color='#76CCFB' 
+                    className='w-[24px] h-[24px] absolute left-[15px] top-[8px] bg-white cursor-pointer' 
+                />} 
+                className="pl-[0px]" 
+            />
             <History className={buttonStyle} />
             <Bell className={buttonStyle} />
             <Star className={buttonStyle} />
