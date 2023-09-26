@@ -21,7 +21,7 @@ export const PrimaryLayout: React.FC = () => {
             <Menu menuVisible={menuVisible} toggleMenu={toggleMenu} />
             <div> 
                 <Header menuVisible={menuVisible} />
-                <Main className={`absolute top-[81px] transition-all duration-300 ease-in-out ${
+                <Main className={`absolute top-[100px] transition-all duration-300 ease-in-out ${
                 menuVisible 
                 ? 'w-[76%] left-[24%]' 
                 : 'w-[94.9%] left-[5.1%]'}`}

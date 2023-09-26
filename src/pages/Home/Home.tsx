@@ -55,6 +55,17 @@ export const Home: React.FC = () => {
         <button className="w-1/5 border-r-[1px] border-[#00000033]">New Releases</button>
         <button className="w-1/5 border-r-[1px] border-[#00000033]">Featured</button>
       </div>
+      <div className="mt-[50px]">
+
+        <Slider {...settings}>
+          {images.map((image, index) => (
+              <div key={index} className='ml-[20px] h-[100px]'>
+                <img src={image} alt="Playlist Image" />
+              </div>
+          ))}
+        </Slider>
+
+      </div>
     </div>
   );
 };

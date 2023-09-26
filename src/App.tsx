@@ -9,6 +9,7 @@ import { SignUp } from "./pages/SignUp/SignUp";
 import { SignIn } from "./pages/SignIn/SignIn";
 import { ProfileSettings } from "./pages/ProfileSettings/ProfileSettings";
 import { AuthLayout } from "./layout/AuthLayout/AuthLayout";
+import {Playlist} from "./pages/Playlist/Playlist.tsx";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
     <Routes>
       <Route path="/" element={<PrimaryLayout />}>
         <Route index element={<Home />} />
+        <Route path="/playlist" element={<Playlist />} />
         <Route path="/profilesettings" element={<ProfileSettings />} />
       </Route>
 
