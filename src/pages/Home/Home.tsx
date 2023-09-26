@@ -19,7 +19,7 @@ export const Home: React.FC = () => {
     slidesToScroll: 1,
     centerMode: true,
     focusOnSelect: true,
-    autoplay: true,
+    autoplay: false,
     arrows: false,
     responsive: [
       {

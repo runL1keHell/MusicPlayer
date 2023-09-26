@@ -23,12 +23,15 @@ export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
             ? 
             <>
                 <button 
-                    className="mt-[30px] flex flex-col items-center justify-center"
-                    onClick={() => navigate('/auth')}    
+                    className="w-fit mx-auto mt-[30px] flex flex-col items-center justify-center"
                 >
                     <User width="42" height="42" />
-                    <Href name="Sign In / Sign Up" className="mt-[15px] text-[18px]" />
-                </button>
+                    <div className="mt-[15px]">
+                        <Href name="Sign In" className="text-[18px]" onClick={() => navigate('/signin')} />
+                        <span className="text-[18px] mx-2 text-white">/</span>
+                        <Href name="Sign Up" className="text-[18px]" onClick={() => navigate('/signup')} />
+                    </div>
+                    </button>
                 <div className="mt-[32px] flex flex-col">
                     <Href name="Home" className={hrefStyling} onClick={() => navigate('/')} />
                     <Href name="Radio" className={hrefStyling} onClick={() => navigate('/')} />
@@ -37,7 +40,7 @@ export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
                     <Href name="Library" className={hrefStyling} onClick={() => navigate('/')} />
                     <Href name="Go Premium" className={hrefStyling} onClick={() => navigate('/')} />
                     <Href name="Lauguage" className={hrefStyling} onClick={() => navigate('/')} />
-                    <Href name="Settings" className={hrefStyling} onClick={() => navigate('/')} />
+                    <Href name="Settings" className={hrefStyling} onClick={() => navigate('/profilesettings')} />
                 </div>
             </> 
             : null}

@@ -27,14 +27,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({className, innerIcon}) => {
                     inputValue ?  handleInputFocus() : handleInputBlur();
                 }} 
                 onKeyDown={e => e.key === 'Enter' ? console.log('Enter has been pressed') : null}
-                // onChange={(e) => {
-                //     e.target.value ? handleInputBlur : handleInputFocus
-                // }}
             />
             {innerIcon && showIcon && 
                 (innerIcon)
             }
-            {/* <FontAwesomeIcon icon={faMagnifyingGlass} color='#76CCFB' className='w-[24px] h-[24px] absolute left-[15px] top-[8px] bg-white cursor-pointer' /> */}
         </div>
     )
 }
