@@ -7,7 +7,7 @@ import { PrimaryLayout } from "./layout/PrimaryLayout/PrimaryLayout";
 import { Home } from "./pages/Home/Home";
 import { SignUp } from "./pages/SignUp/SignUp";
 import { SignIn } from "./pages/SignIn/SignIn";
-import { ProfileSettings } from "./pages/ProfileSettings/ProfileSettings";
+// import { ProfileSettings } from "./pages/ProfileSettings/ProfileSettings";
 import { AuthLayout } from "./layout/AuthLayout/AuthLayout";
 import {Playlist} from "./pages/Playlist/Playlist.tsx";
 
@@ -19,7 +19,7 @@ function App() {
       <Route path="/" element={<PrimaryLayout />}>
         <Route index element={<Home />} />
         <Route path="/playlist" element={<Playlist />} />
-        <Route path="/profilesettings" element={<ProfileSettings />} />
+        {/*<Route path="/profilesettings" element={<ProfileSettings />} />*/}
       </Route>
 
       <Route element={<AuthLayout />}>
