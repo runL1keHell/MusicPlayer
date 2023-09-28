@@ -22,7 +22,7 @@ function App() {
         <Route path="/playlist" element={<Playlist />} />
         {/*<Route path="/profilesettings" element={<ProfileSettings />} />*/}
         <Route path="/search" element={<SearchResults />}>
-          <Route path=":searchText" element={<SearchResults />} />
+          <Route path="/search/:searchText" element={<SearchResults />} />
         </Route>
       </Route>
 

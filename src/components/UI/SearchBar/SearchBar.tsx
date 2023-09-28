@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigateFunction, useNavigate} from "react-router";
-import {useParams} from "react-router-dom";
 
 type SearchBarProps = {
     className?: string;
@@ -11,22 +10,27 @@ export const SearchBar: React.FC<SearchBarProps> = ({className, innerIcon}) => {
     const [showIcon, setShowIcon] = useState<boolean>(true);
     const [inputValue, setInputValue] = useState<string>("");
     const navigate: NavigateFunction = useNavigate();
-    let {searchText} = useParams();
     const handleInputFocus = () => {
         setShowIcon(false);
     };
     const handleInputBlur = () => {
         setShowIcon(true)
     };
-    console.log(searchText)
+
+    useEffect(() => {
+        (async () => {
+
+        })()
+    },[inputValue]);
+
     return (
         <div className={`w-[60%] h-[37px]  relative ${className}`}>
             <input 
                 className='w-[100%] h-[100%] pl-[10px] bg-white rounded-[19px] shadow-inner md:shadow-lg' 
                 type="text"
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                     setInputValue(e.target.value);
-                    searchText = e.target.value;
+                    navigate(`/search/${inputValue}`)
                 }}
                 onFocus={() => {
                     handleInputFocus();
