@@ -41,7 +41,12 @@ export const SignUp: React.FC = () => {
                 <Input type="email" placeholder="E-mail" className="mt-[15px]" />
                 <Input type="password" placeholder="Password" className="mt-[15px]" />
                 <Input type="password" placeholder="Confirm Password" className="mt-[15px]" />
-                <Button name="Continue" className="mt-[35px]" />
+                <Button name="Continue" className="mt-[35px]"
+                        onClick={(e:MouseEvent<HTMLButtonElement>) => {
+                            e.preventDefault();
+
+                        }}
+                />
                 <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                     <span className="w-[173px] h-[1px] bg-black"></span>
                     <span className="bg-[#76CCFB] mx-[15px]">OR</span>
