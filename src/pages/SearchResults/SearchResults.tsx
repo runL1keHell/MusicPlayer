@@ -1,5 +1,9 @@
 import React from "react";
 
 export const SearchResults:React.FC = () => {
-    return
+    return (
+        <>
+            aboba
+        </>
+    )
 }

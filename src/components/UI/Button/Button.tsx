@@ -1,8 +1,11 @@
-type ButtonProps = { 
+import {ButtonHTMLAttributes} from "react";
+
+type Button = {
     name: string | JSX.Element;
     className?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Button;
 
 export const Button: React.FC<ButtonProps> = ({name, className, onClick}) => {
     return (
