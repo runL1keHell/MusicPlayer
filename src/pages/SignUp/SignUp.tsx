@@ -33,8 +33,7 @@ export const SignUp: React.FC = () => {
     };
 
     const onSubmit = (data: SignUpForm) => {
-        console.log(data.name);
-        return 123;
+        console.log(data);
     }
 
     return (
@@ -80,7 +79,7 @@ export const SignUp: React.FC = () => {
                        }
                    )}
             />
-            {errors?.name ? <div>{errors?.email?.message}</div> : null}
+            {errors?.email ? <div>{errors?.email?.message}</div> : null}
             <input type="password" placeholder="Password" className="mt-[15px]"
                    {...register('password',
                        {
@@ -101,18 +100,18 @@ export const SignUp: React.FC = () => {
                        }
                    )}
             />
-            {errors?.name ? <div>{errors?.password?.message}</div> : null}
+            {errors?.password ? <div>{errors?.password?.message}</div> : null}
             <input type="password" placeholder="Confirm Password" className="mt-[15px]"
                    {...register('confirmPassword',
                        {
                            required: 'Confirm password is required',
-                           validate: (value, allValues) => {
-                               value === allValues.password ? true : "Password doesn't match"
+                           validate: (value:string, allValues: SignUpForm):true | string => {
+                               return value === allValues.password || "Password doesn't match";
                            },
                        }
                    )}
             />
-            {errors?.name ? <div>{errors?.confirmPassword?.message}</div> : null}
+            {errors?.confirmPassword ? <div>{errors?.confirmPassword?.message}</div> : null}
             <Button name="Continue" className="mt-[35px]"/>
             <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                 <span className="w-[173px] h-[1px] bg-black"></span>
