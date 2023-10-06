@@ -1,4 +1,4 @@
-import { Input } from "../../components/UI/Input/Input";
+// import { Input } from "../../components/UI/Input/Input";
 import {Button} from "../../components/UI/Button/Button.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGoogle} from "@fortawesome/free-brands-svg-icons/faGoogle";
@@ -6,13 +6,21 @@ import React, {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router";
 import {useForm} from "react-hook-form";
 
+type SignUpForm = {
+    email: string;
+    name: string;
+    password: string;
+    confirmPassword: string;
+};
+
 export const SignUp: React.FC = () => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const {
+        watch,
         register,
         formState: { errors },
         handleSubmit,
-    } = useForm();
+    } = useForm<SignUpForm>();
 
     const navigate: NavigateFunction = useNavigate();
 
@@ -24,8 +32,9 @@ export const SignUp: React.FC = () => {
         setIsHovered(false);
     };
 
-    const onSubmit = () => {
-        alert('form sent')
+    const onSubmit = (data: SignUpForm) => {
+        console.log(data.name);
+        return 123;
     }
 
     return (
@@ -48,25 +57,63 @@ export const SignUp: React.FC = () => {
                 </button>
             </div>
 
-            <Input
-                type="text"
-                placeholder="Username"
-                className="mt-[35px]"
-                {...register('username',
+            <input type="text" placeholder="Username" className="mt-[35px]"
+                {...register('name',
                     {
-                        required: 'Username is required',
+                        required: 'Name is required',
                         pattern: {
                             value: /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
-                            message: 'Please enter proper username',
+                            message: 'Please enter proper name',
                         }
                     }
                 )}
             />
-            {errors?.username ? <div>{errors?.username?.message}</div> : null}
-            <Input type="email" placeholder="E-mail" className="mt-[15px]" />
-            <Input type="password" placeholder="Password" className="mt-[15px]" />
-            <Input type="password" placeholder="Confirm Password" className="mt-[15px]" />
-            <Button name="Continue" type="submit" className="mt-[35px]"/>
+            {errors?.name ? <div>{errors?.name?.message}</div> : null}
+            <input  type="email" placeholder="E-mail" className="mt-[15px]"
+                   {...register('email',
+                       {
+                           required: 'Email is required',
+                           pattern: {
+                               value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                               message: 'Please enter proper email',
+                           }
+                       }
+                   )}
+            />
+            {errors?.name ? <div>{errors?.email?.message}</div> : null}
+            <input type="password" placeholder="Password" className="mt-[15px]"
+                   {...register('password',
+                       {
+                           required: 'Password is required',
+                            pattern: {
+                                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/,
+                                message: 'Password must contain at least one uppercase and one lowercase letter, one number and one special character',
+                           },
+                           minLength: {
+                               value: 8,
+                               message: 'Minimal password length is 8 symbols',
+                           },
+                           maxLength: {
+                               value: 10,
+                               message: 'Maximal password length is 10 symbols'
+                           }
+
+                       }
+                   )}
+            />
+            {errors?.name ? <div>{errors?.password?.message}</div> : null}
+            <input type="password" placeholder="Confirm Password" className="mt-[15px]"
+                   {...register('confirmPassword',
+                       {
+                           required: 'Confirm password is required',
+                           validate: (value, allValues) => {
+                               value === allValues.password ? true : "Password doesn't match"
+                           },
+                       }
+                   )}
+            />
+            {errors?.name ? <div>{errors?.confirmPassword?.message}</div> : null}
+            <Button name="Continue" className="mt-[35px]"/>
             <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                 <span className="w-[173px] h-[1px] bg-black"></span>
                 <span className="bg-[#76CCFB] mx-[15px]">OR</span>

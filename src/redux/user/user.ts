@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // Define a type for the slice state
 type UserRegistration = {
-    username: string;
+    name: string;
     email: string;
     password: string;
 }
@@ -13,7 +13,7 @@ export const registrateUser = createAsyncThunk(
     'user/registrateUser',
     async (data: UserRegistration) => {
         const response = await axios.post(
-            'https://studapi.teachmeskills.by/auth/users/',
+            'http://localhost:3000/auth/sign_up',
             data
         );
         return response.data;

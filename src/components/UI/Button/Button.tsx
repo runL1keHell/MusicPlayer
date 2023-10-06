@@ -1,7 +1,8 @@
 import {ButtonHTMLAttributes} from "react";
+import {FontawesomeObject} from "@fortawesome/fontawesome-svg-core";
 
 type Button = {
-    name: string | JSX.Element;
+    name: string | React.ReactNode;
     className?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
