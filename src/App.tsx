@@ -10,6 +10,7 @@ import { SignIn } from "./pages/SignIn/SignIn";
 // import { ProfileSettings } from "./pages/ProfileSettings/ProfileSettings";
 import { AuthLayout } from "./layout/AuthLayout/AuthLayout";
 import {Playlist} from "./pages/Playlist/Playlist.tsx";
+import {SearchResults} from "./pages/SearchResults/SearchResults.tsx";
 
 function App() {
 
@@ -20,6 +21,9 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/playlist" element={<Playlist />} />
         {/*<Route path="/profilesettings" element={<ProfileSettings />} />*/}
+        <Route path="/search" element={<SearchResults />}>
+          <Route path="/search/:searchText" element={<SearchResults />} />
+        </Route>
       </Route>
 
       <Route element={<AuthLayout />}>

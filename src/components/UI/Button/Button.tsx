@@ -1,8 +1,12 @@
-type ButtonProps = { 
-    name: string | JSX.Element;
+import {ButtonHTMLAttributes} from "react";
+import {FontawesomeObject} from "@fortawesome/fontawesome-svg-core";
+
+type Button = {
+    name: string | React.ReactNode;
     className?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Button;
 
 export const Button: React.FC<ButtonProps> = ({name, className, onClick}) => {
     return (
