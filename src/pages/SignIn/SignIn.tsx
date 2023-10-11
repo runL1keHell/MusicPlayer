@@ -1,13 +1,27 @@
 import { Input } from "../../components/UI/Input/Input"
 import {Button} from "../../components/UI/Button/Button.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGoogle} from "@fortawesome/free-brands-svg-icons/faGoogle";
 import React, {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router";
+import {Controller, useForm} from "react-hook-form";
+import {faEye} from "@fortawesome/free-solid-svg-icons";
+
+type SignInForm = {
+    email: string;
+    password: string;
+};
 
 export const SignIn: React.FC = () => {
+    const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const navigate: NavigateFunction = useNavigate();
+    const { control,
+        handleSubmit,
+    } = useForm<SignInForm>();
+
+    const changePasswordVisibility = () => {
+        setIsPasswordShown((prev) => !prev)
+    };
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -16,8 +30,13 @@ export const SignIn: React.FC = () => {
     const handleMouseLeave = () => {
         setIsHovered(false);
     };
+
+    const onSubmit = (data: SignInForm) => {
+        console.log(data);
+    };
+
     return (
-        <form action="" className="bg-[#76CCFB] flex flex-col justify-center items-center">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-[#76CCFB] flex flex-col justify-center items-center">
 
             <div className="w-auto bg-[#76CCFB] relative"
                 onMouseEnter={handleMouseEnter}
@@ -36,19 +55,54 @@ export const SignIn: React.FC = () => {
                 </button>
             </div>
 
-            <Input type="text" placeholder="Username" className="mt-[35px]"/>
-            <Input type="password" placeholder="Password" className="mt-[15px]" />
+            <Controller
+                name="email"
+                control={control}
+                render={({ field, fieldState}) => (
+                    <div className='bg-[#76CCFB] mt-[20px]'>
+                        <label htmlFor="email" className='font-bold bg-[#76CCFB]'>Email</label>
+                        <Input type='email' required placeholder='Email' {...field} />
+                        {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
+                    </div>
+                )}
+                rules={{required: 'Email is required',
+                    pattern: {
+                        value: /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/,
+                        message: 'Please enter proper email'
+                    }
+                }}
+            />
+            <Controller
+                name="password"
+                control={control}
+                render={({ field, fieldState}) => (
+                    <div className='bg-[#76CCFB] mt-[20px] relative'>
+                        <label htmlFor="password" className='font-bold bg-[#76CCFB]'>Password</label>
+                        <Input type={isPasswordShown ? 'text' : 'password'} required placeholder='Password' {...field} />
+                        <FontAwesomeIcon onClick={changePasswordVisibility} icon={faEye} color={isPasswordShown ? 'black' : 'gray'} className='cursor-pointer absolute right-[20px] top-[55%] bg-white' />
+                        {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
+                    </div>
+                )}
+                rules={{required: 'Password is required',
+                    pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,
+                        message: 'Password must contain at least one uppercase and one lowercase letter, one number and one special character',
+                    },
+                    minLength: {
+                        value: 8,
+                        message: 'Password must be longer'
+                    },
+                    maxLength: {
+                        value: 20,
+                        message: 'Password must be shorter'
+                    }
+                }}
+            />
+
             <Button name="Continue" className="mt-[35px]" />
             <div className="mt-[30px] bg-[#76CCFB] flex items-center">
-                <span className="w-[173px] h-[1px] bg-black"></span>
-                <span className="bg-[#76CCFB] mx-[15px]">OR</span>
-                <span className="w-[173px] h-[1px] bg-black"></span>
+                <span className="w-[350px] h-[1px] bg-black"></span>
             </div>
-            <Button
-                name={<FontAwesomeIcon icon={faGoogle} className="bg-white" />}
-                className="w-[170px] mt-[30px]"
-                onClick={() => {}}
-            />
         </form>
     )
 }
