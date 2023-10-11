@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes } from "react";
 
 type Input = {
     className?: string;
@@ -6,7 +6,7 @@ type Input = {
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & Input;
 
-export const Input = ({className, ...props} :InputProps) => {
+export const Input = React.forwardRef(({className, ...props} :InputProps) => {
     return (
         <>
             <input
@@ -16,4 +16,4 @@ export const Input = ({className, ...props} :InputProps) => {
         </>
 
     )
-}
+})
