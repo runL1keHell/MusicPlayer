@@ -5,6 +5,8 @@ import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
+import {useAppDispatch} from "../../redux/hooks.ts";
+import {registrateUser} from "../../redux/user/user.ts";
 
 type SignUpForm = {
     email: string;
@@ -17,10 +19,13 @@ export const SignUp: React.FC = () => {
     const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const { control,
+        formState: {errors},
         handleSubmit,
+        setError,
         } = useForm<SignUpForm>();
 
     const navigate: NavigateFunction = useNavigate();
+    const dispatch = useAppDispatch();
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -34,8 +39,20 @@ export const SignUp: React.FC = () => {
         setIsPasswordShown((prev) => !prev)
     }
 
-    const onSubmit = (data: SignUpForm) => {
-        console.log(data);
+    const onSubmit = async ({email, name, password}: SignUpForm) => {
+
+        const serverErrorMessage = await dispatch(
+            registrateUser({
+            email,
+            name,
+            password,
+            description: '',
+            profileImageUrl: '',
+        }));
+        // setError('root.serverError', {
+        //     type: 400,
+        //     message: serverErrorMessage,
+        // })
     }
 
     return (
@@ -142,6 +159,7 @@ export const SignUp: React.FC = () => {
                         }
                     }}
                 />
+                {/*{errors.root?.serverError && <span className='absolute bg-[#76CCFB] text-[blue]'>{errors.root.serverError.message}</span>}*/}
                 <Button name="Continue" className="mt-[35px]"/>
                 <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                     <span className="w-[350px] h-[1px] bg-black"></span>

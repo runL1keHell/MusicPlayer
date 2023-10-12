@@ -7,46 +7,114 @@ type UserRegistration = {
     name: string;
     email: string;
     password: string;
+    description: string;
+    profileImageUrl: string;
 }
 
 export const registrateUser = createAsyncThunk(
     'user/registrateUser',
-    async (data: UserRegistration) => {
-        const response = await axios.post(
-            'http://localhost:3000/auth/sign_up',
-            data
-        );
-        return response.data;
+    async (data: UserRegistration, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('http://localhost:3000/auth/sign_up', data);
+
+            if (response.status !== 200) throw new Error('Unexpected status code');
+
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 400) {
+                    return rejectWithValue(error.response.data.message);
+                } else {
+                    return rejectWithValue('An error occurred while processing your request.');
+                }
+            } else {
+                return rejectWithValue('An unexpected error occurred.');
+            }
+        }
     }
 );
 
-type UserLogin = Omit<UserRegistration, 'username'>;
+type UserLogin = Pick<UserRegistration, 'email' & 'password' >;
 
 export const loginUser = createAsyncThunk(
     'user/loginUser',
-    async({onSuccess, data}: {
-        onSuccess(data: any): void;
-        data: UserLogin;
-    }) => {
-        const response = await axios.post(
-            'https://studapi.teachmeskills.by/auth/jwt/create/',
-            data
-        );
-        // if (!response.data || response.status !== 200) return;
-        onSuccess(response.data)
+    async (data: UserLogin) => {
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/auth/sign_in',
+                data,
+            );
+            alert(response.data)
+
+            // if (response.status === 400) {
+            //     alert(response.data)
+            //     if (response.data.message = "email_not_confirmed") {
+            //         alert('beattch')
+            //     } else {
+            //         throw new Error('An unexpected error occured.');
+            //     }
+            // }
+        } catch (e) {
+            console.log(e.response)
+            if (e.response.data.message === 'email_not_confirmed') {
+                return e.response
+            };
+            return null;
+        }
+
     }
 );
 
+type MailVerification = {
+    email: string;
+    id: number;
+    return_url: string;
+}
+export const sendVerificationMail = createAsyncThunk(
+    'user/sendVerificationMail',
+    async(data: MailVerification) => {
+        try {
+            const response = axios.post(
+                'http://localhost:3000/auth/sendVerificationMail',
+                data
+            );
+
+        } catch () {
+
+        }
+    }
+
+)
+
+// export const loginUser = createAsyncThunk(
+//     'user/loginUser',
+//     async({onSuccess, data}: {
+//         onSuccess(data: any): void;
+//         data: UserLogin;
+//     }) => {
+//         const response = await axios.post(
+//             'https://studapi.teachmeskills.by/auth/jwt/create/',
+//             data
+//         );
+//         // if (!response.data || response.status !== 200) return;
+//         onSuccess(response.data)
+//     }
+// );
+
 type UserState = {
-    username: string | null;
+    name: string | null;
     email: string | null;
     accessToken: string | null;
+    profileImageUrl: string | null;
+    id: number | null;
 }
 
 const initialState: UserState = {
-    username: null,
+    name: null,
     email: null,
     accessToken: null,
+    profileImageUrl: null,
+    id: null,
 };
 
 export const userSlice = createSlice({
@@ -68,12 +136,17 @@ export const userSlice = createSlice({
         //     .addCase(registrateUser.rejected, (state, action) => {
         //
         //     });
+        builder
+            .addCase(loginUser.fulfilled, (state, action) => {
+                // state.id = action.payload.data.data.user_id
+                state.id = action.payload.data.data.user_id
+                state.email = action.payload.data.data.email
+            });
     }
 })
 
-export const { login } = userSlice.actions;
+// export const {  } = userSlice.actions;
 
-// Other code such as selectors can use the imported `RootState` type
 export const selectUser = (store: RootState) => store.user;
 
 export default userSlice.reducer;

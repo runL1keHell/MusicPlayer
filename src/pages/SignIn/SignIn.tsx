@@ -5,6 +5,8 @@ import React, {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
+import {useAppDispatch} from "../../redux/hooks.ts";
+import {loginUser} from "../../redux/user/user.ts";
 
 type SignInForm = {
     email: string;
@@ -19,6 +21,7 @@ export const SignIn: React.FC = () => {
         handleSubmit,
     } = useForm<SignInForm>();
 
+    const dispatch = useAppDispatch();
     const changePasswordVisibility = () => {
         setIsPasswordShown((prev) => !prev)
     };
@@ -31,8 +34,11 @@ export const SignIn: React.FC = () => {
         setIsHovered(false);
     };
 
-    const onSubmit = (data: SignInForm) => {
-        console.log(data);
+    const onSubmit = ({email, password}: SignInForm) => {
+        dispatch(loginUser({
+            email,
+            password
+        }))
     };
 
     return (
