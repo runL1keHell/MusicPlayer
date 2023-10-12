@@ -6,7 +6,7 @@ import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
 import {useAppDispatch} from "../../redux/hooks.ts";
-import {loginUser} from "../../redux/user/user.ts";
+import {loginUser, sendVerificationMail} from "../../redux/user/user.ts";
 
 type SignInForm = {
     email: string;
@@ -35,10 +35,19 @@ export const SignIn: React.FC = () => {
     };
 
     const onSubmit = ({email, password}: SignInForm) => {
-        dispatch(loginUser({
-            email,
-            password
-        }))
+        dispatch(
+            loginUser({
+                onFailure: (data) => {
+                    const user_id: number = data.data.data.user_id;
+                    const email: string = data.data.data.email;
+                    dispatch(sendVerificationMail({
+                        user_id,
+                        email,
+                        return_url: 'vk.com'
+                    }))
+                },
+                data: {email, password},
+            }));
     };
 
     return (

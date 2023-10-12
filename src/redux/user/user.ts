@@ -36,70 +36,77 @@ export const registrateUser = createAsyncThunk(
 
 type UserLogin = Pick<UserRegistration, 'email' & 'password' >;
 
-export const loginUser = createAsyncThunk(
-    'user/loginUser',
-    async (data: UserLogin) => {
-        try {
-            const response = await axios.post(
-                'http://localhost:3000/auth/sign_in',
-                data,
-            );
-            alert(response.data)
-
-            // if (response.status === 400) {
-            //     alert(response.data)
-            //     if (response.data.message = "email_not_confirmed") {
-            //         alert('beattch')
-            //     } else {
-            //         throw new Error('An unexpected error occured.');
-            //     }
-            // }
-        } catch (e) {
-            console.log(e.response)
-            if (e.response.data.message === 'email_not_confirmed') {
-                return e.response
-            };
-            return null;
-        }
-
-    }
-);
+// export const loginUser = createAsyncThunk(
+//     'user/loginUser',
+//     async (data: UserLogin) => {
+//         try {
+//             const response = await axios.post(
+//                 'http://localhost:3000/auth/sign_in',
+//                 data,
+//             );
+//             alert(response.data)
+//
+//             // if (response.status === 400) {
+//             //     alert(response.data)
+//             //     if (response.data.message = "email_not_confirmed") {
+//             //         alert('beattch')
+//             //     } else {
+//             //         throw new Error('An unexpected error occured.');
+//             //     }
+//             // }
+//         } catch (e) {
+//             console.log(e.response)
+//             if (e.response.data.message === 'email_not_confirmed') {
+//                 return e.response
+//             };
+//             return null;
+//         }
+//
+//     }
+// );
 
 type MailVerification = {
     email: string;
-    id: number;
+    user_id: number;
     return_url: string;
 }
+
 export const sendVerificationMail = createAsyncThunk(
-    'user/sendVerificationMail',
-    async(data: MailVerification) => {
-        try {
-            const response = axios.post(
-                'http://localhost:3000/auth/sendVerificationMail',
-                data
-            );
-
-        } catch () {
-
-        }
-    }
-
+ 'user/sendVerificationMail',
+ async(data: MailVerification) => {
+     try {
+         const response = await axios.post(
+             'http://localhost:3000/auth/sendVerificationMail',
+             data
+         );
+         return response.data;
+    } catch (e) {
+         console.error(e)
+   }
+ }
 )
 
-// export const loginUser = createAsyncThunk(
-//     'user/loginUser',
-//     async({onSuccess, data}: {
-//         onSuccess(data: any): void;
-//         data: UserLogin;
-//     }) => {
-//         const response = await axios.post(
-//             'https://studapi.teachmeskills.by/auth/jwt/create/',
-//             data
-//         );
-//         // if (!response.data || response.status !== 200) return;
-//         onSuccess(response.data)
-//     }
-// );
+export const loginUser = createAsyncThunk(
+    'user/loginUser',
+    async({onFailure, data}: {
+        onFailure(data: any): void;
+        data: UserLogin;
+    }) => {
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/auth/sign_in',
+                data
+            );
+            console.log(response)
+            return response.data;
+        } catch (e) {
+            if (e.response.data.message === 'email_not_confirmed') {
+                onFailure(e.response);
+            }
+            return null
+        }
+    }
+);
 
 type UserState = {
     name: string | null;
@@ -139,8 +146,7 @@ export const userSlice = createSlice({
         builder
             .addCase(loginUser.fulfilled, (state, action) => {
                 // state.id = action.payload.data.data.user_id
-                state.id = action.payload.data.data.user_id
-                state.email = action.payload.data.data.email
+                // state.email = action.payload.data.data.email
             });
     }
 })
