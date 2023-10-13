@@ -13,6 +13,7 @@ import {Playlist} from "./pages/Playlist/Playlist.tsx";
 import {SearchResults} from "./pages/SearchResults/SearchResults.tsx";
 import {Provider} from "react-redux";
 import {store} from "./redux/store.ts";
+import {MailVerification} from "./pages/MailVerification/MailVerification.tsx";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
             <Route element={<AuthLayout />}>
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="/mailverification/:user_id/:token" element={<MailVerification />} />
             </Route>
 
             <Route path="*" element={ <h1>Sorry. Page wasn't found.</h1>} />

@@ -34,36 +34,29 @@ export const registrateUser = createAsyncThunk(
     }
 );
 
-type UserLogin = Pick<UserRegistration, 'email' & 'password' >;
+type UserLogin = Pick<UserRegistration, 'email' & 'password'>;
 
-// export const loginUser = createAsyncThunk(
-//     'user/loginUser',
-//     async (data: UserLogin) => {
-//         try {
-//             const response = await axios.post(
-//                 'http://localhost:3000/auth/sign_in',
-//                 data,
-//             );
-//             alert(response.data)
-//
-//             // if (response.status === 400) {
-//             //     alert(response.data)
-//             //     if (response.data.message = "email_not_confirmed") {
-//             //         alert('beattch')
-//             //     } else {
-//             //         throw new Error('An unexpected error occured.');
-//             //     }
-//             // }
-//         } catch (e) {
-//             console.log(e.response)
-//             if (e.response.data.message === 'email_not_confirmed') {
-//                 return e.response
-//             };
-//             return null;
-//         }
-//
-//     }
-// );
+export const loginUser = createAsyncThunk(
+    'user/loginUser',
+    async({onFailure, data}: {
+        onFailure(data: any): void;
+        data: UserLogin;
+    }) => {
+        try {
+            const response = await axios.post(
+                'http://localhost:3000/auth/sign_in',
+                data
+            );
+            localStorage.setItem('access_token', response.data.refresh_token);
+            return response.data;
+        } catch (e) {
+            if (e.response.data.message === 'email_not_confirmed') {
+                onFailure(e.response);
+            }
+            return null
+        }
+    }
+);
 
 type MailVerification = {
     email: string;
@@ -71,8 +64,8 @@ type MailVerification = {
     return_url: string;
 }
 
-export const sendVerificationMail = createAsyncThunk(
- 'user/sendVerificationMail',
+export const getVerificationMail = createAsyncThunk(
+ 'user/getVerificationMail',
  async(data: MailVerification) => {
      try {
          const response = await axios.post(
@@ -86,27 +79,25 @@ export const sendVerificationMail = createAsyncThunk(
  }
 )
 
-export const loginUser = createAsyncThunk(
-    'user/loginUser',
-    async({onFailure, data}: {
-        onFailure(data: any): void;
-        data: UserLogin;
-    }) => {
+export type VerifyMail = {
+    user_id: number;
+    token: string;
+}
+
+export const mailVerification = createAsyncThunk(
+    'user/mailVerification',
+    async(data: VerifyMail) => {
         try {
             const response = await axios.post(
-                'http://localhost:3000/auth/sign_in',
-                data
+                'http://localhost:3000/auth/verificateEmail',
+                data,
             );
-            console.log(response)
-            return response.data;
+            return response.data
         } catch (e) {
-            if (e.response.data.message === 'email_not_confirmed') {
-                onFailure(e.response);
-            }
-            return null
+            console.error(`Mail verification went wrong: ${e}`)
         }
     }
-);
+)
 
 type UserState = {
     name: string | null;
@@ -114,6 +105,7 @@ type UserState = {
     accessToken: string | null;
     profileImageUrl: string | null;
     id: number | null;
+    access_token: string | null,
 }
 
 const initialState: UserState = {
@@ -122,6 +114,7 @@ const initialState: UserState = {
     accessToken: null,
     profileImageUrl: null,
     id: null,
+    access_token: null,
 };
 
 export const userSlice = createSlice({
@@ -147,6 +140,7 @@ export const userSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 // state.id = action.payload.data.data.user_id
                 // state.email = action.payload.data.data.email
+                state.access_token = action.payload.access_token;
             });
     }
 })

@@ -6,7 +6,7 @@ import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
 import {useAppDispatch} from "../../redux/hooks.ts";
-import {loginUser, sendVerificationMail} from "../../redux/user/user.ts";
+import {loginUser, getVerificationMail} from "../../redux/user/user.ts";
 
 type SignInForm = {
     email: string;
@@ -40,10 +40,10 @@ export const SignIn: React.FC = () => {
                 onFailure: (data) => {
                     const user_id: number = data.data.data.user_id;
                     const email: string = data.data.data.email;
-                    dispatch(sendVerificationMail({
+                    dispatch(getVerificationMail({
                         user_id,
                         email,
-                        return_url: 'vk.com'
+                        return_url: 'http://localhost:5173/mailverification',
                     }))
                 },
                 data: {email, password},
