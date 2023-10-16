@@ -14,6 +14,7 @@ import {SearchResults} from "./pages/SearchResults/SearchResults.tsx";
 import {Provider} from "react-redux";
 import {store} from "./redux/store.ts";
 import {MailVerification} from "./pages/MailVerification/MailVerification.tsx";
+import {SuccessfullyVerifiedMail} from "./pages/SuccessfullyVerifiedMail/SuccessfullyVerifiedMail.tsx";
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             <Route element={<AuthLayout />}>
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="/successfullyverified" element={<SuccessfullyVerifiedMail />} />
               <Route path="/mailverification/:user_id/:token" element={<MailVerification />} />
             </Route>
 

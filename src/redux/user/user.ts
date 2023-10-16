@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios from 'axios';
+import {get} from "react-hook-form";
 
 // Define a type for the slice state
 type UserRegistration = {
@@ -21,15 +22,7 @@ export const registrateUser = createAsyncThunk(
 
             return response.data;
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.response?.status === 400) {
-                    return rejectWithValue(error.response.data.message);
-                } else {
-                    return rejectWithValue('An error occurred while processing your request.');
-                }
-            } else {
-                return rejectWithValue('An unexpected error occurred.');
-            }
+            return rejectWithValue(error.response.data.message);
         }
     }
 );
@@ -99,22 +92,43 @@ export const mailVerification = createAsyncThunk(
     }
 )
 
+type getUserInfo = {
+    access_token: string;
+}
+
+export const getUserInfo = createAsyncThunk(
+    'user/getUserInfo',
+    async({access_token} : getUserInfo) => {
+        try {
+            const response = await axios.get(
+                'http://localhost:3000/auth/profile',
+                {headers: {"Authorization" : `Bearer ${access_token}`}}
+            );
+            return response.data
+        } catch (error) {
+            console.error('Error during getting user info')
+        }
+    }
+)
+
 type UserState = {
     name: string | null;
     email: string | null;
-    accessToken: string | null;
     profileImageUrl: string | null;
     id: number | null;
-    access_token: string | null,
+    access_token: string | null;
+    status: string | null;
+    error: string | null;
 }
 
 const initialState: UserState = {
     name: null,
     email: null,
-    accessToken: null,
     profileImageUrl: null,
     id: null,
     access_token: null,
+    status: null,
+    error: null,
 };
 
 export const userSlice = createSlice({
@@ -127,21 +141,26 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        //     .addCase(registrateUser.pending, (state) => {
-        //
-        //     })
-        //     .addCase(registrateUser.fulfilled, (state, action) => {
-        //
-        //     })
-        //     .addCase(registrateUser.rejected, (state, action) => {
-        //
-        //     });
+            .addCase(registrateUser.pending, (state) => {
+
+            })
+            .addCase(registrateUser.fulfilled, (state, action) => {
+                state.error = null;
+            })
+            .addCase(registrateUser.rejected, (state, action) => {
+                if (action.payload === "user_exist") {
+                    state.error = 'User with this email already exists'
+                }
+            });
         builder
             .addCase(loginUser.fulfilled, (state, action) => {
                 // state.id = action.payload.data.data.user_id
                 // state.email = action.payload.data.data.email
                 state.access_token = action.payload.access_token;
             });
+        builder
+            .addCase(getUserInfo.fulfilled, (state, action) => {
+            })
     }
 })
 

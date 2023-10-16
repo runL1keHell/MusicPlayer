@@ -14,7 +14,7 @@ export const MailVerification = () => {
             dispath(mailVerification({
                 token, user_id
             }));
-            navigate('/signin')
+            navigate('/successfullyverified')
         }
     },[user_id, token]);
     console.log(user_id, token)
