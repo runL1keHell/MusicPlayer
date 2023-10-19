@@ -6,7 +6,7 @@ type Input = {
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & Input;
 
-export const Input = React.forwardRef(({className, ...props} :InputProps) => {
+export const Input = ({className, ...props} :InputProps) => {
     return (
         <>
             <input
@@ -16,4 +16,4 @@ export const Input = React.forwardRef(({className, ...props} :InputProps) => {
         </>
 
     )
-})
+}

@@ -1,17 +1,19 @@
-import { Input } from "../../components/UI/Input/Input"
 import {Button} from "../../components/UI/Button/Button.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useState} from "react";
+import {Input} from "../../components/UI/Input/Input.tsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
-import {faEye} from "@fortawesome/free-solid-svg-icons";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
+import {loginUser, getVerificationMail, getUserInfo, selectUser} from "../../redux/user/user.ts";
 
 type SignInForm = {
     email: string;
     password: string;
 };
 
-export const SignIn: React.FC = () => {
+export const SignIn = () => {
     const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const navigate: NavigateFunction = useNavigate();
@@ -19,6 +21,8 @@ export const SignIn: React.FC = () => {
         handleSubmit,
     } = useForm<SignInForm>();
 
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
     const changePasswordVisibility = () => {
         setIsPasswordShown((prev) => !prev)
     };
@@ -31,8 +35,24 @@ export const SignIn: React.FC = () => {
         setIsHovered(false);
     };
 
-    const onSubmit = (data: SignInForm) => {
-        console.log(data);
+    const onSubmit = async ({email, password}: SignInForm) => {
+         dispatch(
+            loginUser({
+                onFailure: (data) => {
+                    const user_id: number = data.data.data.user_id;
+                    const email: string = data.data.data.email;
+                    dispatch(getVerificationMail({
+                        user_id,
+                        email,
+                        return_url: 'http://localhost:5173/mailverification',
+                    }))
+                },
+                data: {email, password},
+            })
+        );
+        const access_token = user.access_token;
+        console.log(access_token);
+        access_token ? await dispatch(getUserInfo(access_token)) : null;
     };
 
     return (

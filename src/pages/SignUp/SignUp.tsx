@@ -5,6 +5,8 @@ import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
+import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
+import {registrateUser, selectUser} from "../../redux/user/user.ts";
 
 type SignUpForm = {
     email: string;
@@ -17,10 +19,15 @@ export const SignUp: React.FC = () => {
     const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const { control,
+        formState: {errors},
         handleSubmit,
+        setError,
+        clearErrors,
         } = useForm<SignUpForm>();
 
     const navigate: NavigateFunction = useNavigate();
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -34,9 +41,36 @@ export const SignUp: React.FC = () => {
         setIsPasswordShown((prev) => !prev)
     }
 
-    const onSubmit = (data: SignUpForm) => {
-        console.log(data);
-    }
+    const onSubmit = async ({ email, name, password }: SignUpForm) => {
+        try {
+            await dispatch(
+                registrateUser({
+                    email,
+                    name,
+                    password,
+                    description: '',
+                    profileImageUrl: '',
+                })
+            );
+
+            const userError = null;
+            setTimeout(() => {
+                userError = user.error
+            })
+
+                if (!user.error) {
+                    navigate('/signin');
+                } else {
+                    setError('root.serverError', {
+                        type: 'server',
+                        message: user.error,
+                    });
+                }
+        } catch (error) {
+            console.error('Error during registration:', error);
+            // clearErrors('root.serverError');
+        }
+    };
 
     return (
             <form onSubmit={handleSubmit(onSubmit)} className="bg-[#76CCFB] flex flex-col justify-center items-center">
@@ -142,6 +176,7 @@ export const SignUp: React.FC = () => {
                         }
                     }}
                 />
+                {errors.root?.serverError && <span className='mt-[15px] bg-[#76CCFB] font-bold text-[blue]'>{errors.root.serverError.message}</span>}
                 <Button name="Continue" className="mt-[35px]"/>
                 <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                     <span className="w-[350px] h-[1px] bg-black"></span>
