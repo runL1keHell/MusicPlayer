@@ -51,7 +51,6 @@ export const SignIn = () => {
             })
         );
         const access_token = user.access_token;
-        console.log(access_token);
         access_token ? await dispatch(getUserInfo(access_token)) : null;
     };
 

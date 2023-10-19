@@ -98,7 +98,7 @@ type getUserInfo = {
 
 export const getUserInfo = createAsyncThunk(
     'user/getUserInfo',
-    async({access_token} : getUserInfo) => {
+    async(access_token : getUserInfo) => {
         try {
             const response = await axios.get(
                 'http://localhost:3000/auth/profile',
