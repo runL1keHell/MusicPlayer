@@ -104,7 +104,7 @@ export const getUserInfo = createAsyncThunk(
                 'http://localhost:3000/auth/profile',
                 {headers: {"Authorization" : `Bearer ${access_token}`}}
             );
-            return response.data
+            return response.data;
         } catch (error) {
             console.error('Error during getting user info')
         }
@@ -160,6 +160,8 @@ export const userSlice = createSlice({
             });
         builder
             .addCase(getUserInfo.fulfilled, (state, action) => {
+                state.name = action.payload.username;
+                state.id = action.payload.sub;
             })
     }
 })

@@ -95,10 +95,10 @@ export const SignUp: React.FC = () => {
                 <Controller
                     name="name"
                     control={control}
-                    render={({ field, fieldState}) => (
+                    render={({ field: {value,name, onChange}, fieldState}) => (
                         <div className='bg-[#76CCFB]'>
                             <label htmlFor="name" className='font-bold bg-[#76CCFB]'>Name</label>
-                            <Input type='text' required placeholder='Name' {...field} />
+                            <Input type='text' required placeholder='Name' value={value} name={name} onChange={onChange} />
                             {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
                         </div>
                     )}
@@ -120,10 +120,10 @@ export const SignUp: React.FC = () => {
                 <Controller
                     name="email"
                     control={control}
-                    render={({ field, fieldState}) => (
+                    render={({ field: {value,name, onChange}, fieldState}) => (
                         <div className='bg-[#76CCFB] mt-[20px]'>
                             <label htmlFor="email" className='font-bold bg-[#76CCFB]'>Email</label>
-                            <Input type='email' required placeholder='Email' {...field} />
+                            <Input type='email' required placeholder='Email' value={value} name={name} onChange={onChange} />
                             {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
                         </div>
                     )}
@@ -137,10 +137,10 @@ export const SignUp: React.FC = () => {
                 <Controller
                     name="password"
                     control={control}
-                    render={({ field, fieldState}) => (
+                    render={({ field: {value,name, onChange}, fieldState}) => (
                         <div className='bg-[#76CCFB] mt-[20px] relative'>
                             <label htmlFor="password" className='font-bold bg-[#76CCFB]'>Password</label>
-                            <Input type={isPasswordShown ? 'text' : 'password'} required placeholder='Password' {...field} />
+                            <Input type={isPasswordShown ? 'text' : 'password'} required placeholder='Password' value={value} name={name} onChange={onChange} />
                             <FontAwesomeIcon onClick={changePasswordVisibility} icon={faEye} color={isPasswordShown ? 'black' : 'gray'} className='cursor-pointer absolute right-[20px] top-[55%] bg-white' />
                             {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
                         </div>
@@ -163,10 +163,10 @@ export const SignUp: React.FC = () => {
                 <Controller
                     name="confirmPassword"
                     control={control}
-                    render={({ field, fieldState}) => (
+                    render={({ field: {value,name, onChange}, fieldState}) => (
                         <div className='bg-[#76CCFB] mt-[20px]'>
                             <label htmlFor="password" className='font-bold bg-[#76CCFB]'>Confirm Password</label>
-                            <Input type='password' required placeholder='Confirm Password' {...field} />
+                            <Input type='password' required placeholder='Confirm Password' value={value} name={name} onChange={onChange} />
                             {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
                         </div>
                     )}
@@ -176,7 +176,7 @@ export const SignUp: React.FC = () => {
                         }
                     }}
                 />
-                {errors.root?.serverError && <span className='mt-[15px] bg-[#76CCFB] font-bold text-[blue]'>{errors.root.serverError.message}</span>}
+                {errors.root?.serverError && <span className='absolute bottom-[100px] mt-[15px] bg-[#76CCFB] font-bold text-[blue]'>{errors.root.serverError.message}</span>}
                 <Button name="Continue" className="mt-[35px]"/>
                 <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                     <span className="w-[350px] h-[1px] bg-black"></span>
