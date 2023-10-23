@@ -38,6 +38,11 @@ export const SignIn = () => {
     const onSubmit = async ({email, password}: SignInForm) => {
          dispatch(
             loginUser({
+                onSuccess() {
+                    const access_token = user.access_token;
+                    access_token ? dispatch(getUserInfo(access_token)) : null;
+                    navigate('/');
+                },
                 onFailure: (data) => {
                     const user_id: number = data.data.data.user_id;
                     const email: string = data.data.data.email;
@@ -50,8 +55,6 @@ export const SignIn = () => {
                 data: {email, password},
             })
         );
-        const access_token = user.access_token;
-        access_token ? await dispatch(getUserInfo(access_token)) : null;
     };
 
     return (
@@ -77,10 +80,10 @@ export const SignIn = () => {
             <Controller
                 name="email"
                 control={control}
-                render={({ field, fieldState}) => (
+                render={({ field: {value,name, onChange}, fieldState}) => (
                     <div className='bg-[#76CCFB] mt-[20px]'>
                         <label htmlFor="email" className='font-bold bg-[#76CCFB]'>Email</label>
-                        <Input type='email' required placeholder='Email' {...field} />
+                        <Input type='email' required placeholder='Email' value={value} name={name} onChange={onChange} />
                         {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
                     </div>
                 )}
@@ -94,10 +97,10 @@ export const SignIn = () => {
             <Controller
                 name="password"
                 control={control}
-                render={({ field, fieldState}) => (
+                render={({ field: {value,name, onChange}, fieldState}) => (
                     <div className='bg-[#76CCFB] mt-[20px] relative'>
                         <label htmlFor="password" className='font-bold bg-[#76CCFB]'>Password</label>
-                        <Input type={isPasswordShown ? 'text' : 'password'} required placeholder='Password' {...field} />
+                        <Input type={isPasswordShown ? 'text' : 'password'} required placeholder='Password' value={value} name={name} onChange={onChange} />
                         <FontAwesomeIcon onClick={changePasswordVisibility} icon={faEye} color={isPasswordShown ? 'black' : 'gray'} className='cursor-pointer absolute right-[20px] top-[55%] bg-white' />
                         {fieldState.error && <span className='absolute bg-[#76CCFB] text-[blue]'>{fieldState.error.message}</span>}
                     </div>

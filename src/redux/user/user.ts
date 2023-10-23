@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios from 'axios';
-import {get} from "react-hook-form";
 
 // Define a type for the slice state
 type UserRegistration = {
@@ -31,7 +30,8 @@ type UserLogin = Pick<UserRegistration, 'email' & 'password'>;
 
 export const loginUser = createAsyncThunk(
     'user/loginUser',
-    async({onFailure, data}: {
+    async({onSuccess, onFailure, data}: {
+        onSuccess(): void;
         onFailure(data: any): void;
         data: UserLogin;
     }) => {
@@ -40,12 +40,12 @@ export const loginUser = createAsyncThunk(
                 'http://localhost:3000/auth/sign_in',
                 data
             );
-            localStorage.setItem('access_token', response.data.refresh_token);
+            onSuccess();
             return response.data;
         } catch (e) {
             if (e.response.data.message === 'email_not_confirmed') {
                 onFailure(e.response);
-            }
+            };
             return null
         }
     }
@@ -92,19 +92,15 @@ export const mailVerification = createAsyncThunk(
     }
 )
 
-type getUserInfo = {
-    access_token: string;
-}
-
 export const getUserInfo = createAsyncThunk(
     'user/getUserInfo',
-    async(access_token : getUserInfo) => {
+    async(access_token : string) => {
         try {
             const response = await axios.get(
                 'http://localhost:3000/auth/profile',
                 {headers: {"Authorization" : `Bearer ${access_token}`}}
             );
-            return response.data
+            return response.data;
         } catch (error) {
             console.error('Error during getting user info')
         }
@@ -117,6 +113,7 @@ type UserState = {
     profileImageUrl: string | null;
     id: number | null;
     access_token: string | null;
+    refresh_token: string | null;
     status: string | null;
     error: string | null;
 }
@@ -127,6 +124,7 @@ const initialState: UserState = {
     profileImageUrl: null,
     id: null,
     access_token: null,
+    refresh_token: null,
     status: null,
     error: null,
 };
@@ -135,9 +133,15 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        // login: (state, action) => {
-        //     state = action.payload;
-        // },
+        logOut: (state, action) => {
+                state.name = null;
+                state.email = null;
+                state.profileImageUrl = null;
+                state.id = null;
+                state.access_token = null;
+                state.status = null;
+                state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -155,16 +159,18 @@ export const userSlice = createSlice({
         builder
             .addCase(loginUser.fulfilled, (state, action) => {
                 // state.id = action.payload.data.data.user_id
-                // state.email = action.payload.data.data.email
+                state.refresh_token = action.payload.refresh_token;
                 state.access_token = action.payload.access_token;
             });
         builder
             .addCase(getUserInfo.fulfilled, (state, action) => {
+                state.name = action.payload.username;
+                state.id = action.payload.sub;
             })
     }
 })
 
-// export const {  } = userSlice.actions;
+export const { logOut } = userSlice.actions;
 
 export const selectUser = (store: RootState) => store.user;
 
