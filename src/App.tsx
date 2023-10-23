@@ -26,8 +26,8 @@ function App() {
           <Routes>
             <Route path="/" element={<PrimaryLayout />}>
               <Route index element={<Home />} />
-              <Route path="/album" element={<Album />} />
-              <Route path="/artist" element={<Artist />} />
+              <Route path="/album/:albumId" element={<Album />} />
+              <Route path="/artist/:artistId" element={<Artist />} />
               {/*<Route path="/profilesettings" element={<ProfileSettings />} />*/}
               <Route path="/search" element={<SearchResults />}>
                 <Route path="/search/:searchText" element={<SearchResults />} />

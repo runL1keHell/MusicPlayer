@@ -1,19 +1,38 @@
+import {useNavigate, useParams} from "react-router";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
+import {useEffect} from "react";
+import {getArtistById, getTracksByAlbum, selectArtist} from "../../redux/music/music.ts";
+
 export const Artist = () => {
-    //
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const artist = useAppSelector(selectArtist);
+    const {artistId} = useParams();
+    const numericArtistId = Number(artistId);
+
+    useEffect(() => {
+        dispatch(getTracksByAlbum(numericArtistId));
+    },[numericArtistId]);
+
+    console.log(artist)
+
     return (
         <section className="flex flex-col mx-[20px]">
-            <h1 className="text-5xl text-white flex justify-center">Fleedwood Mac</h1>
+            <h1 className="text-5xl text-white flex justify-center">{artist.name}</h1>
             <div className="flex flex-wrap mt-[50px]">
-
-                {/*arr.map(() => {*/}
-                {/*return(*/}
-                {/*    <div className="flex flex-col items-center">*/}
-                {/*        <img src="" className="w-[190px] h-[200px] bg-white" alt=""/>*/}
-                {/*        <span className="text-[20px] text-[#76CCFB]">Rumors</span>*/}
-                {/*    </div>*/}
-                {/*    )*/}
-                {/*})*/}
-
+                {artist.albums &&
+                    artist.albums.map((album) => {
+                        return(
+                            <div
+                                className="flex flex-col items-center cursor-pointer"
+                                onClick={() => navigate(`/album/${album.id}`)}
+                            >
+                                <img src={album.imageUrl} className="w-[190px] h-[200px] bg-white" alt=""/>
+                                <span className="text-[20px] text-[#76CCFB]">{album.name}</span>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </section>
     )

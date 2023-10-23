@@ -3,88 +3,124 @@ import type { RootState } from '../store'
 import axios from 'axios';
 
 
+
 export const getAlbums = createAsyncThunk(
     'music/getAlbums',
-    async( ) => {
+    async(offset: number ) => {
         try {
-            const response = axios.get('/aboba');
+            const response = await axios.get(`http://localhost:3000/album/getAll?offset=${offset}&limit=5`);
             return response.data;
         } catch (e) {
             console.error(`Error while getting albums: ${e}`)
         }
     }
-)
+);
 
-export const getArtistInfoById = createAsyncThunk(
-    'music/getArtistInfoById',
-    async (id: number) => {
+export const getAlbumById = createAsyncThunk(
+    'music/getAlbumById',
+    async(albumId: number) => {
         try {
-            const response = axios.get(`http://localhost:3000/artist/getById/${id}`)
+            const response = await axios.get(`http://localhost:3000/album/getById?albumId=${albumId}`);
             return response.data;
         } catch (e) {
-            console.error(`Error while getting artist info by id: ${e}`)
+            console.error(`Error while getting album by its id: ${e}`);
         }
     }
 )
 
-interface Album {
-    id: string;
-    title: string;
-    songs: Song[];
+export const getTracksByAlbum = createAsyncThunk(
+    'music/getTracksByAlbum',
+    async(albumId: number) => {
+        try {
+            const response = await axios.get(`http://localhost:3000/track/getByAlbumId?albumId=${albumId}`)
+            return response.data
+        } catch (e) {
+            console.log(`Error while getting tracks by albumId: ${e}`)
+        }
+    }
+);
+
+export const getArtistById = createAsyncThunk(
+    'music/getArtistById',
+    async(artistId: number) => {
+        try {
+            const response = await axios.get(`http://localhost:3000/artist/getById?id=${artistId}`)
+            return response.data;
+        } catch (e) {
+            console.log(`Error while getting artist by id: ${e}`)
+        }
+    }
+);
+
+export type Album = Track[];
+
+export type Track = {
+    id: number;
+    name: string;
+    imageUrl: string;
+    albumId: number;
+    artistId: number;
+    artistName: string;
+    albumName: string;
 }
 
-interface Song {
-    id: string;
-    title: string;
+export type AlbumsByArtist = {
+    id: number;
+    name: string;
+    imageUrl: string;
 }
 
-interface MusicState {
+export type Artist = {
+    id: number;
+    name: string;
+    profileImageUrl: string | null;
+    description: string | null;
+    albums: AlbumsByArtist[];
+}
+
+export type MusicState = {
     albums: Album[];
     currentAlbum: Album | null;
-    currentSong: Song | null;
+    currentSong: Track | null;
+    currentArtist: Artist | null;
 }
 
 const initialState: MusicState = {
     albums: [],
     currentAlbum: null,
     currentSong: null,
+    currentArtist: null,
 };
 
 export const musicSlice = createSlice({
     name: 'music',
     initialState,
     reducers: {
-        // login: (state, action) => {
-        //     state = action.payload;
-        // },
+        clearAlbums: (state) => {
+            state.albums = [];
+        },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getArtistInfoById.pending, (state) => {
-    //
-    //         })
-            .addCase(getArtistInfoById.fulfilled, (state, action) => {
-
+            .addCase(getAlbums.fulfilled, (state, action) => {
+                // state.albums = state.albums.concat(action.payload);
+                state.albums = action.payload
             })
-            .addCase(getArtistInfoById.rejected, (state, action) => {
-                if (action.payload === "user_exist") {
-                    state.error = 'User with this email already exists'
-                }
-            });
-    //     builder
-    //         .addCase(loginUser.fulfilled, (state, action) => {
-    //             // state.id = action.payload.data.data.user_id
-    //             // state.email = action.payload.data.data.email
-    //             state.access_token = action.payload.access_token;
-    //         });
-    //     builder
-    //         .addCase(getUserInfo.fulfilled, (state, action) => {
-    //         })
-    // }
+        builder
+            .addCase(getTracksByAlbum.fulfilled, (state, action) => {
+                state.currentAlbum = action.payload;
+            })
+        builder.addCase(getArtistById.fulfilled, (state, action) => {
+            state.currentArtist = action.payload;
+        })
+    }
 })
 
-export const {  } = musicSlice.actions;
+export const { clearAlbums } = musicSlice.actions;
 
 export const selectMusic = (store: RootState) => store.music;
+export const selectAlbum = (store:RootState) => store.music.currentAlbum;
+
+export const selectArtist = (store:RootState) => store.music.currentArtist;
 
 export default musicSlice.reducer;

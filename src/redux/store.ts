@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import  userReducer from './user/user.ts';
+import userReducer from './user/user.ts';
+import musicReducer from './music/music.ts'
 import {
     persistStore,
     persistReducer,
@@ -14,6 +15,7 @@ import  storage from 'redux-persist/lib/storage';
 
 const rootReducer = combineReducers({
     user: userReducer,
+    music: musicReducer,
 });
 
 const persistConfig = {
