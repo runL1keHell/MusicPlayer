@@ -133,7 +133,7 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        logOut: (state, action) => {
+        logOut: (state) => {
                 state.name = null;
                 state.email = null;
                 state.profileImageUrl = null;

@@ -9,7 +9,7 @@ export type MenuStatus = {
     menuVisible:boolean
 };
 
-export const PrimaryLayout: React.FC = () => {
+export const  PrimaryLayout: React.FC = () => {
     const [menuVisible, setMenuVisible] = useState<boolean>(true);
 
     const toggleMenu = () => {
@@ -17,11 +17,11 @@ export const PrimaryLayout: React.FC = () => {
     };
 
     return (
-        <div className="h-screen">
+        <div className="h-screen overflow-y-hidden">
             <Menu menuVisible={menuVisible} toggleMenu={toggleMenu} />
             <div> 
                 <Header menuVisible={menuVisible} />
-                <Main className={`absolute top-[100px] transition-all duration-300 ease-in-out ${
+                <Main className={`absolute top-[84px] transition-all duration-300 ease-in-out ${
                 menuVisible 
                 ? 'w-[76%] left-[24%]' 
                 : 'w-[94.9%] left-[5.1%]'}`}

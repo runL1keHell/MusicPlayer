@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className='w-full'>
+    <div className='h-[calc(100vh-171px)] overflow-y-auto'>
       <Slider {...settings}>
         {images.map((image, index) => (
           <div key={index} className='w-[402px] h-[255px] ml-[42px]'>
@@ -65,6 +65,10 @@ export const Home: React.FC = () => {
           ))}
         </Slider>
 
+      </div>
+
+      <div className="flex flex-wrap mt-[50px] ml-[15px]">
+        <div className="w-[100px] h-[100px] bg-black"></div>
       </div>
     </div>
   );
