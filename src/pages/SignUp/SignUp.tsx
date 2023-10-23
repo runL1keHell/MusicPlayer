@@ -22,7 +22,6 @@ export const SignUp: React.FC = () => {
         formState: {errors},
         handleSubmit,
         setError,
-        clearErrors,
         } = useForm<SignUpForm>();
 
     const navigate: NavigateFunction = useNavigate();
@@ -53,7 +52,7 @@ export const SignUp: React.FC = () => {
                 })
             );
 
-            const userError = null;
+            let userError = null;
             setTimeout(() => {
                 userError = user.error
             })

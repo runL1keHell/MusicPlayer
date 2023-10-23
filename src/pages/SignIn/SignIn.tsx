@@ -38,6 +38,11 @@ export const SignIn = () => {
     const onSubmit = async ({email, password}: SignInForm) => {
          dispatch(
             loginUser({
+                onSuccess() {
+                    const access_token = user.access_token;
+                    access_token ? dispatch(getUserInfo(access_token)) : null;
+                    navigate('/');
+                },
                 onFailure: (data) => {
                     const user_id: number = data.data.data.user_id;
                     const email: string = data.data.data.email;
@@ -50,8 +55,6 @@ export const SignIn = () => {
                 data: {email, password},
             })
         );
-        const access_token = user.access_token;
-        access_token ? await dispatch(getUserInfo(access_token)) : null;
     };
 
     return (
