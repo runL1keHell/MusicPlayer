@@ -24,6 +24,7 @@ export const Artist = () => {
                         artist.albums.map((album) => {
                             return(
                                 <div
+                                    key={album.id}
                                     className="flex flex-col items-center cursor-pointer"
                                     onClick={() => navigate(`/album/${album.id}`)}
                                 >
