@@ -2,13 +2,17 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios from 'axios';
 
-
+export type AlbumByGetAlbums = {
+    id: number;
+    name: string;
+    imageUrl: string;
+}
 
 export const getAlbums = createAsyncThunk(
     'music/getAlbums',
     async(offset: number ) => {
         try {
-            const response = await axios.get(`http://localhost:3000/album/getAll?offset=${offset}&limit=5`);
+            const response = await axios.get(`http://localhost:3000/album/getAll?offset=${offset}&limit=3`);
             return response.data;
         } catch (e) {
             console.error(`Error while getting albums: ${e}`)
@@ -103,8 +107,15 @@ export const musicSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getAlbums.fulfilled, (state, action) => {
-                // state.albums = state.albums.concat(action.payload);
-                state.albums = action.payload
+                // state.albums = [...state.albums, ...action.payload]
+                // state.albums = action.payload;
+                const newAlbums = action.payload.filter((album) => {
+                    return !state.albums.some((existingAlbum) => existingAlbum.id === album.id);
+                });
+                state.albums = [...state.albums, ...newAlbums];
+            })
+            .addCase(getAlbums.pending, (state, action) => {
+                // state.albums = action.payload
             })
         builder
             .addCase(getTracksByAlbum.fulfilled, (state, action) => {
@@ -118,6 +129,7 @@ export const musicSlice = createSlice({
 
 export const { clearAlbums } = musicSlice.actions;
 
+export const selectAlbums = (store: RootState) => store.music.albums;
 export const selectMusic = (store: RootState) => store.music;
 export const selectAlbum = (store:RootState) => store.music.currentAlbum;
 

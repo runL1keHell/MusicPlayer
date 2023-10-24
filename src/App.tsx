@@ -25,7 +25,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<PrimaryLayout />}>
-              <Route index element={<Home />} />
+              {/*<Route index element={<Home />} />*/}
+                <Route index element={<Home />} />
               <Route path="/album/:albumId" element={<Album />} />
               <Route path="/artist/:artistId" element={<Artist />} />
               {/*<Route path="/profilesettings" element={<ProfileSettings />} />*/}

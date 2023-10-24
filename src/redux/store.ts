@@ -12,6 +12,7 @@ import {
     REGISTER,
 } from 'redux-persist';
 import  storage from 'redux-persist/lib/storage';
+import music from "./music/music.ts";
 
 const rootReducer = combineReducers({
     user: userReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['music']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

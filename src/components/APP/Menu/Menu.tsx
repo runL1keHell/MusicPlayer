@@ -10,7 +10,6 @@ type MenuType = {
 }
 
 export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
-    // const [menuVisible, setMenuVisible] = useState(true);
     const hrefStyling = 'mt-[23px]';
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -42,7 +41,7 @@ export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
                     }
                 </button>
                 <div className="mt-[32px] flex flex-col">
-                    <Href name="Home" className={hrefStyling} />
+                    <Href name="Home" className={hrefStyling} onClick={() => {navigate('/')}} />
                     <Href name="Radio" className={hrefStyling} />
                     <Href name="Podcast" className={hrefStyling} />
                     <Href name="Downloads" className={hrefStyling} />

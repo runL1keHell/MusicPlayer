@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import {addListener, createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios from 'axios';
 
@@ -30,23 +30,26 @@ type UserLogin = Pick<UserRegistration, 'email' & 'password'>;
 
 export const loginUser = createAsyncThunk(
     'user/loginUser',
-    async({onSuccess, onFailure, data}: {
-        onSuccess(): void;
+    async({onSuccess, onFailure, data, rejectWithValue}: {
+        onSuccess(data:any): void;
         onFailure(data: any): void;
         data: UserLogin;
+        rejectWithValue(data: any): void;
     }) => {
         try {
             const response = await axios.post(
                 'http://localhost:3000/auth/sign_in',
                 data
             );
-            onSuccess();
+            onSuccess(response.data);
             return response.data;
         } catch (e) {
             if (e.response.data.message === 'email_not_confirmed') {
                 onFailure(e.response);
             };
-            return null
+            if (e.response.data.message === 'password_incorrect') {
+                return rejectWithValue(e.response);
+            }
         }
     }
 );
@@ -161,7 +164,11 @@ export const userSlice = createSlice({
                 // state.id = action.payload.data.data.user_id
                 state.refresh_token = action.payload.refresh_token;
                 state.access_token = action.payload.access_token;
-            });
+            })
+            .addCase(loginUser.rejected, (state, action) => {
+                // console.log(action.payload)
+                //     state.error = 'Password for this user is incorrect'
+            })
         builder
             .addCase(getUserInfo.fulfilled, (state, action) => {
                 state.name = action.payload.username;

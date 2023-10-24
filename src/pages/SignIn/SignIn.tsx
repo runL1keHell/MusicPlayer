@@ -19,6 +19,7 @@ export const SignIn = () => {
     const navigate: NavigateFunction = useNavigate();
     const { control,
         handleSubmit,
+        setError,
     } = useForm<SignInForm>();
 
     const dispatch = useAppDispatch();
@@ -35,12 +36,18 @@ export const SignIn = () => {
         setIsHovered(false);
     };
 
+    setError('root.serverError', {
+        type: 'server',
+        message: user.error,
+    });
+
     const onSubmit = async ({email, password}: SignInForm) => {
          dispatch(
             loginUser({
-                onSuccess() {
-                    const access_token = user.access_token;
-                    access_token ? dispatch(getUserInfo(access_token)) : null;
+                onSuccess(data) {
+                    const access_token = data.access_token;
+                    console.log(access_token);
+                    dispatch(getUserInfo(access_token));
                     navigate('/');
                 },
                 onFailure: (data) => {
