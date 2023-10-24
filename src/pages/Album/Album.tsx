@@ -17,12 +17,18 @@ export const Album = () => {
     },[numericAlbumId]);
 
     const album = useAppSelector(selectAlbum);
+    const songWithImage = album && album.find((song) => {
+        return song.imageUrl !== null});
+    const imageUrl = songWithImage.imageUrl;
 
     if (album) {
         return (
             <section className="h-[calc(100vh-171px)] overflow-y-auto pl-[30px]">
                 <div className="flex">
-                    <div className={`w-[347px] h-[263px] relative rounded-[24px] bg-[url(${album[0].imageUrl})] bg-cover`}>
+                    <div className={`
+                    bg-[url(${imageUrl})]
+                    w-[347px] h-[263px] relative rounded-[24px] bg-cover`}>
+                        <img src={imageUrl} alt=""/>
                     <span
                         className="uppercase absolute bottom-0 text-[#76CCFB] text-[30px] pr-[10px] cursor-pointer"
                         onClick={() => {
