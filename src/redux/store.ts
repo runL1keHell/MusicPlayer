@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import  userReducer from './user/user.ts';
+import userReducer from './user/user.ts';
+import musicReducer from './music/music.ts'
 import {
     persistStore,
     persistReducer,
@@ -11,14 +12,17 @@ import {
     REGISTER,
 } from 'redux-persist';
 import  storage from 'redux-persist/lib/storage';
+import music from "./music/music.ts";
 
 const rootReducer = combineReducers({
     user: userReducer,
+    music: musicReducer,
 });
 
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['music']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -36,7 +40,5 @@ export const persistor = persistStore(store);
 
 export default store;
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch

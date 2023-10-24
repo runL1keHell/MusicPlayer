@@ -10,14 +10,13 @@ type MenuType = {
 }
 
 export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
-    // const [menuVisible, setMenuVisible] = useState(true);
     const hrefStyling = 'mt-[23px]';
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const user = useAppSelector(selectUser);
 
     return (
-        <nav className={`w-[23%] h-screen ml-[15px] border-r-[1px] border-[#00000066] ${menuVisible ? 'translate-x-0' : '-translate-x-[82%]'} transition-transform duration-300 ease-in-out flex flex-col`}>
+        <nav className={`w-[23%] h-screen fixed ml-[15px] border-r-[1px] border-[#00000066] ${menuVisible ? 'translate-x-0' : '-translate-x-[82%]'} transition-transform duration-300 ease-in-out flex flex-col`}>
             <button className="mt-[30px] mr-[30px] flex flex-col items-end" onClick={toggleMenu}>
                 <div className="w-6 h-[3px] bg-white mb-1"></div>
                 <div className="w-6 h-[3px] bg-white mb-1"></div>
@@ -42,7 +41,7 @@ export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
                     }
                 </button>
                 <div className="mt-[32px] flex flex-col">
-                    <Href name="Home" className={hrefStyling} />
+                    <Href name="Home" className={hrefStyling} onClick={() => {navigate('/')}} />
                     <Href name="Radio" className={hrefStyling} />
                     <Href name="Podcast" className={hrefStyling} />
                     <Href name="Downloads" className={hrefStyling} />

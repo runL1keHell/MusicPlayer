@@ -52,11 +52,6 @@ export const SignUp: React.FC = () => {
                 })
             );
 
-            let userError = null;
-            setTimeout(() => {
-                userError = user.error
-            })
-
                 if (!user.error) {
                     navigate('/signin');
                 } else {
