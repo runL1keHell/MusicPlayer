@@ -6,18 +6,18 @@ type SearchBarProps = {
     innerIcon: JSX.Element;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({className, innerIcon}) => {
+export const SearchBar = ({className, innerIcon}: SearchBarProps) => {
     const [showIcon, setShowIcon] = useState<boolean>(true);
     const [inputValue, setInputValue] = useState<string>("");
     const navigate: NavigateFunction = useNavigate();
-    const handleInputFocus = () => {
+    const handleInputFocus = (): void => {
         setShowIcon(false);
     };
-    const handleInputBlur = () => {
+    const handleInputBlur = (): void => {
         setShowIcon(true)
     };
 
-    useEffect(() => {
+    useEffect((): void => {
         (async () => {
 
         })()
@@ -32,15 +32,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({className, innerIcon}) => {
                     setInputValue(e.target.value);
                     navigate(`/search/${inputValue}`)
                 }}
-                onFocus={() => {
+                onFocus={(): void => {
                     handleInputFocus();
                     navigate('/search');
                 }}
-                onBlur={() => {
+                onBlur={(): void => {
                     inputValue ?  handleInputFocus() : handleInputBlur();
-                    inputValue ? null : navigate('/');
+                    inputValue ? "" : navigate('/');
                 }}
-                onKeyDown={e => e.key === 'Enter' ? console.log('Enter has been pressed') : null}
+                onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>): null  => e.key === 'Enter' ? null : null}
             />
             {innerIcon && showIcon && 
                 (innerIcon)

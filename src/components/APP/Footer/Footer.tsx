@@ -2,8 +2,9 @@ import { faForwardStep, faPause, faPlay, faShuffle, faStar } from "@fortawesome/
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { MenuStatus } from "../../../layout/PrimaryLayout/PrimaryLayout"
 import { useState } from "react"
+import React from "react";
 
-export const Footer: React.FC<MenuStatus> = ({menuVisible}) => {
+export const Footer = ({menuVisible}: MenuStatus) => {
     const [isPlaying, setIsPlayng] = useState<boolean>(false);
     
     return (

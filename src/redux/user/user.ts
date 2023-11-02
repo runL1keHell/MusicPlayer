@@ -1,8 +1,7 @@
-import {addListener, createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {AsyncThunk, createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import type { RootState } from '../store'
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 
-// Define a type for the slice state
 type UserRegistration = {
     name: string;
     email: string;
@@ -11,28 +10,43 @@ type UserRegistration = {
     profileImageUrl: string;
 }
 
-export const registrateUser = createAsyncThunk(
+type RegistrateUserResponse = "";
+type RegistrateUserError = {
+    message: string;
+    statusCode: number;
+} | "";
+
+export const registrateUser: AsyncThunk<RegistrateUserResponse, UserRegistration, {}> = createAsyncThunk(
     'user/registrateUser',
     async (data: UserRegistration, { rejectWithValue }) => {
         try {
-            const response = await axios.post('http://localhost:3000/auth/sign_up', data);
-
-            if (response.status !== 200) throw new Error('Unexpected status code');
-
+            const response: AxiosResponse<RegistrateUserResponse> = await axios.post('http://localhost:3000/auth/sign_up', data);
             return response.data;
-        } catch (error) {
+        } catch (error: AxiosError<RegistrateUserError>) {
+            console.log(error);
             return rejectWithValue(error.response.data.message);
         }
     }
 );
 
-type UserLogin = Pick<UserRegistration, 'email' & 'password'>;
+type UserLogin = Pick<UserRegistration, 'email' | 'password'>;
+type UserLoginResponse = {
+    access_token: string;
+    refresh_token: string;
+}
+type UserLoginError = {
+    message: string;
+    data: {
+        user_id: number;
+        email: "" | null;
+    }
+};
 
-export const loginUser = createAsyncThunk(
+export const loginUser: AsyncThunk<UserLoginResponse, UserLogin, any> = createAsyncThunk(
     'user/loginUser',
     async({onSuccess, onFailure, data, rejectWithValue}: {
-        onSuccess(data:any): void;
-        onFailure(data: any): void;
+        onSuccess(data: UserLoginResponse): void;
+        onFailure(data: UserLoginResponse): void;
         data: UserLogin;
         rejectWithValue(data: any): void;
     }) => {
@@ -44,11 +58,17 @@ export const loginUser = createAsyncThunk(
             onSuccess(response.data);
             return response.data;
         } catch (e) {
-            if (e.response.data.message === 'email_not_confirmed') {
-                onFailure(e.response);
-            };
-            if (e.response.data.message === 'password_incorrect') {
-                return rejectWithValue(e.response);
+            if (axios.isAxiosError(e)) {
+                const axiosError = e as AxiosError<UserLoginError>;
+                const response = axiosError.response;
+                if (response) {
+                    const message = response.data.message;
+                    if (message === 'email_not_confirmed') {
+                        onFailure(response);
+                    } else if (message === 'password_incorrect') {
+                        return rejectWithValue(response);
+                    }
+                }
             }
         }
     }

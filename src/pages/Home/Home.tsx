@@ -18,7 +18,7 @@ export const Home: React.FC = () => {
   const scrollHandler = () => {
     const div: HTMLDivElement | null = divRef.current;
     if (div) {
-      if (div.scrollHeight - (div.scrollTop + div.offsetHeight) < 100 && offset < 12) {
+      if (div.scrollHeight - (div.scrollTop + div.offsetHeight) < 150 && offset < 12) {
         setFetching((prev) => !prev);
       }
     }
