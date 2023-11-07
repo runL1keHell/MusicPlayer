@@ -2,6 +2,14 @@ import {AsyncThunk, createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
+export enum USER_API {
+    REGISTRATE_USER = 'http://localhost:3000/auth/sign_up',
+    LOGIN_USER = 'http://localhost:3000/auth/sign_in',
+    GET_VERIFICATION_MAIL = 'http://localhost:3000/auth/sendVerificationMail',
+    MAIL_VERIFICATION = 'http://localhost:3000/auth/verificateEmail',
+    GET_USER_INFO = 'http://localhost:3000/auth/profile',
+}
+
 type UserRegistration = {
     name: string;
     email: string;
@@ -20,7 +28,7 @@ export const registrateUser: AsyncThunk<RegistrateUserResponse, UserRegistration
     'user/registrateUser',
     async (data: UserRegistration, { rejectWithValue }) => {
         try {
-            const response: AxiosResponse<RegistrateUserResponse> = await axios.post('http://localhost:3000/auth/sign_up', data);
+            const response: AxiosResponse<RegistrateUserResponse> = await axios.post(USER_API.REGISTRATE_USER, data);
             return response.data;
         } catch (error: AxiosError<RegistrateUserError>) {
             console.log(error);
@@ -52,7 +60,7 @@ export const loginUser: AsyncThunk<UserLoginResponse, UserLogin, any> = createAs
     }) => {
         try {
             const response = await axios.post(
-                'http://localhost:3000/auth/sign_in',
+                USER_API.LOGIN_USER,
                 data
             );
             onSuccess(response.data);
@@ -85,7 +93,7 @@ export const getVerificationMail = createAsyncThunk(
  async(data: MailVerification) => {
      try {
          const response = await axios.post(
-             'http://localhost:3000/auth/sendVerificationMail',
+             USER_API.GET_VERIFICATION_MAIL,
              data
          );
          return response.data;
@@ -105,7 +113,7 @@ export const mailVerification = createAsyncThunk(
     async(data: VerifyMail) => {
         try {
             const response = await axios.post(
-                'http://localhost:3000/auth/verificateEmail',
+                USER_API.MAIL_VERIFICATION,
                 data,
             );
             return response.data
@@ -120,7 +128,7 @@ export const getUserInfo = createAsyncThunk(
     async(access_token : string) => {
         try {
             const response = await axios.get(
-                'http://localhost:3000/auth/profile',
+                USER_API.GET_USER_INFO,
                 {headers: {"Authorization" : `Bearer ${access_token}`}}
             );
             return response.data;
