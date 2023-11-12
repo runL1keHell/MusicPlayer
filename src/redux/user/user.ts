@@ -1,4 +1,4 @@
-import {AsyncThunk, createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios, { AxiosResponse, AxiosError } from 'axios';
 
@@ -19,25 +19,33 @@ type UserRegistration = {
 }
 
 type RegistrateUserResponse = "";
+
 type RegistrateUserError = {
     message: string;
     statusCode: number;
-} | "";
+};
 
-export const registrateUser: AsyncThunk<RegistrateUserResponse, UserRegistration, {}> = createAsyncThunk(
+export const registrateUser = createAsyncThunk<RegistrateUserResponse, UserRegistration, {rejectValue: string}>(
     'user/registrateUser',
-    async (data: UserRegistration, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response: AxiosResponse<RegistrateUserResponse> = await axios.post(USER_API.REGISTRATE_USER, data);
             return response.data;
-        } catch (error: AxiosError<RegistrateUserError>) {
-            console.log(error);
-            return rejectWithValue(error.response.data.message);
+        } catch (error) {
+            const axiosError = error as AxiosError<RegistrateUserError>;
+            return rejectWithValue(axiosError.response ? axiosError.response.data.message : "");
         }
     }
 );
 
-type UserLogin = Pick<UserRegistration, 'email' | 'password'>;
+type UserLogin = {
+    data: {
+        email: string;
+        password: string;
+    };
+    onSuccess: (data: UserLoginResponse) => void;
+    onFailure: (error: UserLoginError) => void;
+};
 type UserLoginResponse = {
     access_token: string;
     refresh_token: string;
@@ -46,18 +54,13 @@ type UserLoginError = {
     message: string;
     data: {
         user_id: number;
-        email: "" | null;
+        email: string;
     }
 };
 
-export const loginUser: AsyncThunk<UserLoginResponse, UserLogin, any> = createAsyncThunk(
+export const loginUser = createAsyncThunk<UserLoginResponse, UserLogin, {rejectValue: string}>(
     'user/loginUser',
-    async({onSuccess, onFailure, data, rejectWithValue}: {
-        onSuccess(data: UserLoginResponse): void;
-        onFailure(data: UserLoginResponse): void;
-        data: UserLogin;
-        rejectWithValue(data: any): void;
-    }) => {
+    async({onSuccess, onFailure, data }, { rejectWithValue }) => {
         try {
             const response = await axios.post(
                 USER_API.LOGIN_USER,
@@ -65,17 +68,15 @@ export const loginUser: AsyncThunk<UserLoginResponse, UserLogin, any> = createAs
             );
             onSuccess(response.data);
             return response.data;
-        } catch (e) {
-            if (axios.isAxiosError(e)) {
-                const axiosError = e as AxiosError<UserLoginError>;
-                const response = axiosError.response;
-                if (response) {
-                    const message = response.data.message;
-                    if (message === 'email_not_confirmed') {
-                        onFailure(response);
-                    } else if (message === 'password_incorrect') {
-                        return rejectWithValue(response);
-                    }
+        } catch (error) {
+            const axiosError = error as AxiosError<UserLoginError>;
+            if (axiosError.response) {
+                const message = axiosError.response.data.message;
+                if (message === 'email_not_confirmed') {
+                    onFailure(axiosError.response.data);
+                    return rejectWithValue(message);
+                } else if (message === 'password_incorrect') {
+                    return rejectWithValue(message);
                 }
             }
         }
@@ -88,17 +89,18 @@ type MailVerification = {
     return_url: string;
 }
 
-export const getVerificationMail = createAsyncThunk(
+export const getVerificationMail = createAsyncThunk<"", MailVerification, {rejectValue: string}>(
  'user/getVerificationMail',
- async(data: MailVerification) => {
+ async(data, {rejectWithValue}) => {
      try {
          const response = await axios.post(
              USER_API.GET_VERIFICATION_MAIL,
              data
          );
          return response.data;
-    } catch (e) {
-         console.error(e)
+    } catch (error) {
+         const axiosError = error as AxiosError;
+         return rejectWithValue(axiosError.message);
    }
  }
 )
@@ -108,32 +110,45 @@ export type VerifyMail = {
     token: string;
 }
 
-export const mailVerification = createAsyncThunk(
+export const mailVerification = createAsyncThunk<"", VerifyMail, {rejectValue: string}>(
     'user/mailVerification',
-    async(data: VerifyMail) => {
+    async(data, { rejectWithValue }) => {
         try {
             const response = await axios.post(
                 USER_API.MAIL_VERIFICATION,
                 data,
             );
             return response.data
-        } catch (e) {
-            console.error(`Mail verification went wrong: ${e}`)
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            return rejectWithValue(axiosError.message);
         }
     }
 )
 
-export const getUserInfo = createAsyncThunk(
+type UserInfoResponse = {
+    sub: number;
+    username: string;
+    iat: number;
+    exp: number;
+}
+
+type UserInfo = {
+    access_token: string;
+}
+
+export const getUserInfo = createAsyncThunk<UserInfoResponse, UserInfo, {rejectValue: string}>(
     'user/getUserInfo',
-    async(access_token : string) => {
+    async(data, {rejectWithValue}) => {
         try {
             const response = await axios.get(
                 USER_API.GET_USER_INFO,
-                {headers: {"Authorization" : `Bearer ${access_token}`}}
+                {headers: {"Authorization" : `Bearer ${data}`}}
             );
             return response.data;
         } catch (error) {
-            console.error('Error during getting user info')
+            const axiosError = error as AxiosError;
+            rejectWithValue(axiosError.message);
         }
     }
 )
@@ -176,12 +191,11 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(registrateUser.pending, (state) => {
-
-            })
-            .addCase(registrateUser.fulfilled, (state, action) => {
-                state.error = null;
-            })
+            // .addCase(registrateUser.pending, (state) => {
+            //
+            // })
+            // .addCase(registrateUser.fulfilled, (state, action) => {
+            // })
             .addCase(registrateUser.rejected, (state, action) => {
                 if (action.payload === "user_exist") {
                     state.error = 'User with this email already exists'
@@ -193,10 +207,10 @@ export const userSlice = createSlice({
                 state.refresh_token = action.payload.refresh_token;
                 state.access_token = action.payload.access_token;
             })
-            .addCase(loginUser.rejected, (state, action) => {
+            // .addCase(loginUser.rejected, (state, action) => {
                 // console.log(action.payload)
                 //     state.error = 'Password for this user is incorrect'
-            })
+            // })
         builder
             .addCase(getUserInfo.fulfilled, (state, action) => {
                 state.name = action.payload.username;
