@@ -51,8 +51,9 @@ export const SignIn = () => {
                     navigate('/');
                 },
                 onFailure: (data) => {
-                    const user_id: number = data.data.data.user_id;
-                    const email: string = data.data.data.email;
+                    console.log(data)
+                    const user_id: number = data.data.user_id;
+                    const email: string = data.data.email;
                     dispatch(getVerificationMail({
                         user_id,
                         email,

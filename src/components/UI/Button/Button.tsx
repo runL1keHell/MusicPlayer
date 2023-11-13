@@ -7,7 +7,7 @@ type Button = {
 }
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & Button;
 
-export const Button: React.FC<ButtonProps> = ({name, className, onClick}) => {
+export const Button = ({name, className, onClick}: ButtonProps) => {
     return (
         <button
             className={`w-[232px] h-[50px] text-[24px] text-black bg-white rounded-[20px] ${className}`}

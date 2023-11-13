@@ -19,7 +19,7 @@ export const Album = () => {
     const album = useAppSelector(selectAlbum);
     const songWithImage = album && album.find((song) => {
         return song.imageUrl !== null});
-    const imageUrl = songWithImage.imageUrl;
+    const imageUrl = songWithImage && songWithImage.imageUrl;
 
     if (album) {
         return (

@@ -9,7 +9,7 @@ import { MenuStatus } from "../../../layout/PrimaryLayout/PrimaryLayout.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-export const Header: React.FC<MenuStatus> = ({menuVisible}) => {
+export const Header = ({menuVisible}: MenuStatus) => {
     const buttonStyle = 'w-[24px] h-[24px] cursor-pointer';
     const navigate = useNavigate();
     return (

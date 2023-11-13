@@ -9,7 +9,7 @@ type MenuType = {
     toggleMenu: () => void;
 }
 
-export const Menu: React.FC<MenuType> = ({menuVisible, toggleMenu}) => {
+export const Menu = ({menuVisible, toggleMenu}: MenuType) => {
     const hrefStyling = 'mt-[23px]';
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
