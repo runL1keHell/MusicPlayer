@@ -16,6 +16,7 @@ import {MailVerification} from "./pages/MailVerification/MailVerification.tsx";
 import {SuccessfullyVerifiedMail} from "./pages/SuccessfullyVerifiedMail/SuccessfullyVerifiedMail.tsx";
 import {PersistGate} from "redux-persist/integration/react";
 import {Artist} from "./pages/Artist/Artist.tsx";
+import {UnsuccessfullyVerifiedMail} from "./pages/UnsuccessfullyVerifiedMail/UnsuccessfullyVerifiedMail.tsx";
 
 function App() {
 
@@ -38,8 +39,9 @@ function App() {
                <Route element={<AuthLayout />}>
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/signin" element={<SignIn />} />
-                  <Route path="/successfullyverified" element={<SuccessfullyVerifiedMail />} />
                   <Route path="/mailverification/:user_id/:token" element={<MailVerification />} />
+                  <Route path="/successfullyverified" element={<SuccessfullyVerifiedMail />} />
+                  <Route path="/unsuccessfullyverifiedmail" element={<UnsuccessfullyVerifiedMail />} />
                 </Route>
 
                 <Route path="*" element={ <h1>Sorry. Page wasn't found.</h1>} />

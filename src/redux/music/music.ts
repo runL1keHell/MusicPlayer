@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export type AlbumByGetAlbums = {
     id: number;
@@ -8,14 +8,15 @@ export type AlbumByGetAlbums = {
     imageUrl: string;
 }
 
-export const getAlbums = createAsyncThunk(
+export const getAlbums = createAsyncThunk<"", number, {rejectValue: string}>(
     'music/getAlbums',
-    async(offset: number ) => {
+    async(offset, { rejectWithValue }) => {
         try {
             const response = await axios.get(`http://localhost:3000/album/getAll?offset=${offset}&limit=3`);
             return response.data;
-        } catch (e) {
-            console.error(`Error while getting albums: ${e}`)
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            rejectWithValue(axiosError.message);
         }
     }
 );

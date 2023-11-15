@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
 import {registrateUser, selectUser} from "../../redux/user/user.ts";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 type SignUpForm = {
     email: string;
@@ -44,25 +46,26 @@ export const SignUp: React.FC = () => {
         try {
             await dispatch(
                 registrateUser({
-                    email,
-                    name,
-                    password,
-                    description: '',
-                    profileImageUrl: '',
+                    data: {
+                        email,
+                        name,
+                        password,
+                        description: '',
+                        profileImageUrl: '',
+                    },
+                    onSuccess() {
+                        navigate('/signin');
+                    },
+                    onFailure(errorMessage) {
+                        setError('root.serverError', {
+                            type: 'server',
+                            message: errorMessage,
+                        });
+                    }
                 })
             );
-
-                if (!user.error) {
-                    navigate('/signin');
-                } else {
-                    setError('root.serverError', {
-                        type: 'server',
-                        message: user.error,
-                    });
-                }
         } catch (error) {
             console.error('Error during registration:', error);
-            // clearErrors('root.serverError');
         }
     };
 

@@ -11,11 +11,15 @@ export enum USER_API {
 }
 
 type UserRegistration = {
-    name: string;
-    email: string;
-    password: string;
-    description: string;
-    profileImageUrl: string;
+    data: {
+        name: string;
+        email: string;
+        password: string;
+        description: string;
+        profileImageUrl: string;
+    };
+    onSuccess: () => void;
+    onFailure: (errorMessage: string) => void;
 }
 
 type RegistrateUserResponse = "";
@@ -25,15 +29,26 @@ type RegistrateUserError = {
     statusCode: number;
 };
 
+type ServerErrorStorage = {
+    user_exist: string;
+}
+
 export const registrateUser = createAsyncThunk<RegistrateUserResponse, UserRegistration, {rejectValue: string}>(
     'user/registrateUser',
-    async (data, { rejectWithValue }) => {
+    async ({data, onSuccess, onFailure}, { rejectWithValue }) => {
         try {
             const response: AxiosResponse<RegistrateUserResponse> = await axios.post(USER_API.REGISTRATE_USER, data);
+            onSuccess();
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError<RegistrateUserError>;
-            return rejectWithValue(axiosError.response ? axiosError.response.data.message : "");
+            const serverError: string = axiosError.response ? axiosError.response.data.message : "";
+            const serverErrorStorage: ServerErrorStorage = {
+                user_exist: 'User with this email already exists',
+            };
+            const errorMessage: string = serverErrorStorage[serverError];
+            onFailure(errorMessage);
+            return rejectWithValue(errorMessage);
         }
     }
 );
@@ -77,19 +92,22 @@ export const loginUser = createAsyncThunk<UserLoginResponse, UserLogin, {rejectV
                     return rejectWithValue(message);
                 } else if (message === 'password_incorrect') {
                     return rejectWithValue(message);
+                } else if (message === 'user_not_found') {
+                    return rejectWithValue(message);
                 }
             }
         }
     }
 );
 
-type MailVerification = {
+
+type sendVerificationMail = {
     email: string;
     user_id: number;
     return_url: string;
 }
 
-export const getVerificationMail = createAsyncThunk<"", MailVerification, {rejectValue: string}>(
+export const sendVerificationMail = createAsyncThunk<"", sendVerificationMail, {rejectValue: string}>(
  'user/getVerificationMail',
  async(data, {rejectWithValue}) => {
      try {
@@ -105,22 +123,28 @@ export const getVerificationMail = createAsyncThunk<"", MailVerification, {rejec
  }
 )
 
-export type VerifyMail = {
-    user_id: number;
-    token: string;
+export type VerificateMail = {
+    data: {
+        user_id: number;
+        token: string;
+    };
+    onSuccess: () => void;
+    onFailure: () => void;
 }
 
-export const mailVerification = createAsyncThunk<"", VerifyMail, {rejectValue: string}>(
+export const verificateEmail = createAsyncThunk<"", VerificateMail, {rejectValue: string}>(
     'user/mailVerification',
-    async(data, { rejectWithValue }) => {
+    async({data, onSuccess, onFailure}, { rejectWithValue }) => {
         try {
             const response = await axios.post(
                 USER_API.MAIL_VERIFICATION,
                 data,
             );
+            onSuccess();
             return response.data
         } catch (error) {
             const axiosError = error as AxiosError;
+            onFailure();
             return rejectWithValue(axiosError.message);
         }
     }
@@ -197,9 +221,7 @@ export const userSlice = createSlice({
             // .addCase(registrateUser.fulfilled, (state, action) => {
             // })
             .addCase(registrateUser.rejected, (state, action) => {
-                if (action.payload === "user_exist") {
-                    state.error = 'User with this email already exists'
-                }
+                    state.error = action.payload;
             });
         builder
             .addCase(loginUser.fulfilled, (state, action) => {

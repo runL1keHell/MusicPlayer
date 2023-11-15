@@ -1,6 +1,6 @@
 import {NavigateFunction, useNavigate, useParams} from "react-router";
 import {useEffect} from "react";
-import {mailVerification} from "../../redux/user/user.ts";
+import { verificateEmail} from "../../redux/user/user.ts";
 import {useAppDispatch} from "../../redux/hooks.ts";
 export const MailVerification = () => {
     const {user_id, token} = useParams();
@@ -11,10 +11,18 @@ export const MailVerification = () => {
 
     useEffect(() => {
         if (user_id && token) {
-            dispath(mailVerification({
-                token, user_id: numericUser_id
+            dispath(verificateEmail({
+                data: {
+                    token,
+                    user_id: numericUser_id
+                },
+                onSuccess() {
+                    navigate('/successfullyverified')
+                },
+                onFailure() {
+                    navigate('/unsuccessfullyverified')
+                }
             }));
-            navigate('/successfullyverified')
         }
     },[user_id, token]);
     console.log(user_id, token)

@@ -6,7 +6,7 @@ import {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
-import {loginUser, getVerificationMail, getUserInfo, selectUser} from "../../redux/user/user.ts";
+import {loginUser, sendVerificationMail, getUserInfo, selectUser} from "../../redux/user/user.ts";
 
 type SignInForm = {
     email: string;
@@ -47,14 +47,14 @@ export const SignIn = () => {
                 onSuccess(data) {
                     const access_token = data.access_token;
                     console.log(access_token);
-                    dispatch(getUserInfo(access_token));
+                    dispatch(getUserInfo({access_token}));
                     navigate('/');
                 },
                 onFailure: (data) => {
                     console.log(data)
                     const user_id: number = data.data.user_id;
                     const email: string = data.data.email;
-                    dispatch(getVerificationMail({
+                    dispatch(sendVerificationMail({
                         user_id,
                         email,
                         return_url: 'http://localhost:5173/mailverification',
