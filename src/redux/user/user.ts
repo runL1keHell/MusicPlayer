@@ -163,11 +163,11 @@ type UserInfo = {
 
 export const getUserInfo = createAsyncThunk<UserInfoResponse, UserInfo, {rejectValue: string}>(
     'user/getUserInfo',
-    async(data, {rejectWithValue}) => {
+    async({access_token}, {rejectWithValue}) => {
         try {
             const response = await axios.get(
                 USER_API.GET_USER_INFO,
-                {headers: {"Authorization" : `Bearer ${data}`}}
+                {headers: {"Authorization" : `Bearer ${access_token}`}}
             );
             return response.data;
         } catch (error) {
