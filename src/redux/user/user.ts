@@ -29,10 +29,6 @@ type RegistrateUserError = {
     statusCode: number;
 };
 
-type ServerErrorStorage = {
-    user_exist: string;
-}
-
 export const registrateUser = createAsyncThunk<RegistrateUserResponse, UserRegistration, {rejectValue: string}>(
     'user/registrateUser',
     async ({data, onSuccess, onFailure}, { rejectWithValue }) => {
@@ -42,11 +38,7 @@ export const registrateUser = createAsyncThunk<RegistrateUserResponse, UserRegis
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError<RegistrateUserError>;
-            const serverError: string = axiosError.response ? axiosError.response.data.message : "";
-            const serverErrorStorage: ServerErrorStorage = {
-                user_exist: 'User with this email already exists',
-            };
-            const errorMessage: string = serverErrorStorage[serverError];
+            const errorMessage: string = axiosError.response ? axiosError.response.data.message : "";
             onFailure(errorMessage);
             return rejectWithValue(errorMessage);
         }
@@ -86,15 +78,8 @@ export const loginUser = createAsyncThunk<UserLoginResponse, UserLogin, {rejectV
         } catch (error) {
             const axiosError = error as AxiosError<UserLoginError>;
             if (axiosError.response) {
-                const message = axiosError.response.data.message;
-                if (message === 'email_not_confirmed') {
-                    onFailure(axiosError.response.data);
-                    return rejectWithValue(message);
-                } else if (message === 'password_incorrect') {
-                    return rejectWithValue(message);
-                } else if (message === 'user_not_found') {
-                    return rejectWithValue(message);
-                }
+                onFailure(axiosError.response.data);
+                return  rejectWithValue(axiosError.response.data.message);
             }
         }
     }

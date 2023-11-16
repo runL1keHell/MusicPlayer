@@ -5,10 +5,8 @@ import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
-import {registrateUser, selectUser} from "../../redux/user/user.ts";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
+import {useAppDispatch} from "../../redux/hooks.ts";
+import {registrateUser} from "../../redux/user/user.ts";
 
 type SignUpForm = {
     email: string;
@@ -17,10 +15,16 @@ type SignUpForm = {
     confirmPassword: string;
 };
 
+type SignUpErrorMessageStorage = {
+    [key: string]: string;
+    user_exist: string;
+}
+
 export const SignUp: React.FC = () => {
     const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
-    const { control,
+    const {
+        control,
         formState: {errors},
         handleSubmit,
         setError,
@@ -28,7 +32,6 @@ export const SignUp: React.FC = () => {
 
     const navigate: NavigateFunction = useNavigate();
     const dispatch = useAppDispatch();
-    const user = useAppSelector(selectUser);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -57,9 +60,13 @@ export const SignUp: React.FC = () => {
                         navigate('/signin');
                     },
                     onFailure(errorMessage) {
+                        const errorMessageStorage: SignUpErrorMessageStorage = {
+                            user_exist: 'User with this email already exists',
+                        };
+                        const messageToShow: string = errorMessageStorage[errorMessage as keyof SignUpErrorMessageStorage];
                         setError('root.serverError', {
                             type: 'server',
-                            message: errorMessage,
+                            message: messageToShow,
                         });
                     }
                 })

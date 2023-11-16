@@ -2,7 +2,7 @@ import {Button} from "../../components/UI/Button/Button.tsx";
 import {Input} from "../../components/UI/Input/Input.tsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-import {useState} from "react";
+import React, {useState} from "react";
 import {NavigateFunction, useNavigate} from "react-router";
 import {Controller, useForm} from "react-hook-form";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
@@ -13,11 +13,19 @@ type SignInForm = {
     password: string;
 };
 
+type SignInErrorMessageStorage = {
+    email_not_confirmed: string;
+    password_incorrect: string;
+    user_not_found: string;
+}
+
 export const SignIn = () => {
     const [isPasswordShown, setIsPasswordShown] = useState<boolean>(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const navigate: NavigateFunction = useNavigate();
-    const { control,
+    const {
+        formState: {errors},
+        control,
         handleSubmit,
         setError,
     } = useForm<SignInForm>();
@@ -36,11 +44,6 @@ export const SignIn = () => {
         setIsHovered(false);
     };
 
-    setError('root.serverError', {
-        type: 'server',
-        message: user.error,
-    });
-
     const onSubmit = async ({email, password}: SignInForm) => {
          dispatch(
             loginUser({
@@ -50,15 +53,26 @@ export const SignIn = () => {
                     dispatch(getUserInfo({access_token}));
                     navigate('/');
                 },
-                onFailure: (data) => {
-                    console.log(data)
-                    const user_id: number = data.data.user_id;
-                    const email: string = data.data.email;
-                    dispatch(sendVerificationMail({
-                        user_id,
-                        email,
-                        return_url: 'http://localhost:5173/mailverification',
-                    }))
+                onFailure: (error) => {
+                    if (error.message === "email_not_confirmed") {
+                        const user_id: number = error.data.user_id;
+                        const email: string = error.data.email;
+                        dispatch(sendVerificationMail({
+                            user_id,
+                            email,
+                            return_url: 'http://localhost:5173/mailverification',
+                        }));
+                    }
+                    const errorMessageStorage: SignInErrorMessageStorage = {
+                        email_not_confirmed: "First, you need to activate your account via link send to your email",
+                        password_incorrect: "Password is incorrect",
+                        user_not_found: "There's no such user with this email",
+                    };
+                    const messageToShow: string = errorMessageStorage[error.message];
+                    setError('root.serverError', {
+                        type: 'server',
+                        message: messageToShow,
+                    });
                 },
                 data: {email, password},
             })
@@ -128,8 +142,8 @@ export const SignIn = () => {
                     }
                 }}
             />
-
             <Button name="Continue" className="mt-[35px]" />
+            {errors.root?.serverError && <span className='absolute bottom-[173px] mt-[15px] bg-[#76CCFB] font-bold text-[blue]'>{errors.root.serverError.message}</span>}
             <div className="mt-[30px] bg-[#76CCFB] flex items-center">
                 <span className="w-[350px] h-[1px] bg-black"></span>
             </div>
