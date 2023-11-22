@@ -12,7 +12,6 @@ import {
     REGISTER,
 } from 'redux-persist';
 import  storage from 'redux-persist/lib/storage';
-import music from "./music/music.ts";
 
 const rootReducer = combineReducers({
     user: userReducer,

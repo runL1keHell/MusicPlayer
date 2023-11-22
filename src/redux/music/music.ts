@@ -1,14 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios, { AxiosError } from 'axios';
+import {Album, Artist, GetAlbumsResponse, MusicState} from "../../@types/ReduxTypes.ts";
 
-export type AlbumByGetAlbums = {
-    id: number;
-    name: string;
-    imageUrl: string;
-}
-
-export const getAlbums = createAsyncThunk<"", number, {rejectValue: string}>(
+export const getAlbums = createAsyncThunk<GetAlbumsResponse, number, {rejectValue: string}>(
     'music/getAlbums',
     async(offset, { rejectWithValue }) => {
         try {
@@ -21,9 +16,9 @@ export const getAlbums = createAsyncThunk<"", number, {rejectValue: string}>(
     }
 );
 
-export const getAlbumById = createAsyncThunk(
+export const getAlbumById = createAsyncThunk<Album, number, {rejectValue: string}>(
     'music/getAlbumById',
-    async(albumId: number) => {
+    async(albumId) => {
         try {
             const response = await axios.get(`http://localhost:3000/album/getById?albumId=${albumId}`);
             return response.data;
@@ -35,7 +30,7 @@ export const getAlbumById = createAsyncThunk(
 
 export const getTracksByAlbum = createAsyncThunk(
     'music/getTracksByAlbum',
-    async(albumId: number) => {
+    async(albumId) => {
         try {
             const response = await axios.get(`http://localhost:3000/track/getByAlbumId?albumId=${albumId}`)
             return response.data
@@ -45,9 +40,9 @@ export const getTracksByAlbum = createAsyncThunk(
     }
 );
 
-export const getArtistById = createAsyncThunk(
+export const getArtistById = createAsyncThunk<Artist, number, {rejectValue: string}>(
     'music/getArtistById',
-    async(artistId: number) => {
+    async(artistId) => {
         try {
             const response = await axios.get(`http://localhost:3000/artist/getById?id=${artistId}`)
             return response.data;
@@ -56,39 +51,6 @@ export const getArtistById = createAsyncThunk(
         }
     }
 );
-
-export type Album = Track[];
-
-export type Track = {
-    id: number;
-    name: string;
-    imageUrl: string;
-    albumId: number;
-    artistId: number;
-    artistName: string;
-    albumName: string;
-}
-
-export type AlbumsByArtist = {
-    id: number;
-    name: string;
-    imageUrl: string;
-}
-
-export type Artist = {
-    id: number;
-    name: string;
-    profileImageUrl: string | null;
-    description: string | null;
-    albums: AlbumsByArtist[];
-}
-
-export type MusicState = {
-    albums: Album[];
-    currentAlbum: Album | null;
-    currentSong: Track | null;
-    currentArtist: Artist | null;
-}
 
 const initialState: MusicState = {
     albums: [],
@@ -114,9 +76,6 @@ export const musicSlice = createSlice({
                     return !state.albums.some((existingAlbum) => existingAlbum.id === album.id);
                 });
                 state.albums = [...state.albums, ...newAlbums];
-            })
-            .addCase(getAlbums.pending, (state, action) => {
-                // state.albums = action.payload
             })
         builder
             .addCase(getTracksByAlbum.fulfilled, (state, action) => {

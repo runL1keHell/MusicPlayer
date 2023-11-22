@@ -16,7 +16,7 @@ export const Menu = ({menuVisible, toggleMenu}: MenuType) => {
     const user = useAppSelector(selectUser);
 
     return (
-        <nav className={`w-[23%] h-screen fixed ml-[15px] border-r-[1px] border-[#00000066] ${menuVisible ? 'translate-x-0' : '-translate-x-[82%]'} transition-transform duration-300 ease-in-out flex flex-col`}>
+        <nav className={`w-[23%] h-screen ml-[15px] border-r-[1px] border-[#00000066] ${menuVisible ? 'translate-x-0' : '-translate-x-[82%]'} transition-transform duration-300 ease-in-out flex flex-col`}>
             <button className="mt-[30px] mr-[30px] flex flex-col items-end" onClick={toggleMenu}>
                 <div className="w-6 h-[3px] bg-white mb-1"></div>
                 <div className="w-6 h-[3px] bg-white mb-1"></div>

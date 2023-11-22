@@ -1,33 +1,20 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios, { AxiosResponse, AxiosError } from 'axios';
+import {
+    RegistrateUserError,
+    RegistrateUserResponse, UserInfo, UserInfoResponse, UserLogin, UserLoginError,
+    UserLoginResponse,
+    UserRegistration, UserState, VerificateMail, SendVerificationMail,
+} from "../../@types/ReduxTypes.ts";
 
-export enum USER_API {
+enum USER_API {
     REGISTRATE_USER = 'http://localhost:3000/auth/sign_up',
     LOGIN_USER = 'http://localhost:3000/auth/sign_in',
     GET_VERIFICATION_MAIL = 'http://localhost:3000/auth/sendVerificationMail',
     MAIL_VERIFICATION = 'http://localhost:3000/auth/verificateEmail',
     GET_USER_INFO = 'http://localhost:3000/auth/profile',
 }
-
-type UserRegistration = {
-    data: {
-        name: string;
-        email: string;
-        password: string;
-        description: string;
-        profileImageUrl: string;
-    };
-    onSuccess: () => void;
-    onFailure: (errorMessage: string) => void;
-}
-
-type RegistrateUserResponse = "";
-
-type RegistrateUserError = {
-    message: string;
-    statusCode: number;
-};
 
 export const registrateUser = createAsyncThunk<RegistrateUserResponse, UserRegistration, {rejectValue: string}>(
     'user/registrateUser',
@@ -44,26 +31,6 @@ export const registrateUser = createAsyncThunk<RegistrateUserResponse, UserRegis
         }
     }
 );
-
-type UserLogin = {
-    data: {
-        email: string;
-        password: string;
-    };
-    onSuccess: (data: UserLoginResponse) => void;
-    onFailure: (error: UserLoginError) => void;
-};
-type UserLoginResponse = {
-    access_token: string;
-    refresh_token: string;
-}
-type UserLoginError = {
-    message: string;
-    data: {
-        user_id: number;
-        email: string;
-    }
-};
 
 export const loginUser = createAsyncThunk<UserLoginResponse, UserLogin, {rejectValue: string}>(
     'user/loginUser',
@@ -85,14 +52,7 @@ export const loginUser = createAsyncThunk<UserLoginResponse, UserLogin, {rejectV
     }
 );
 
-
-type sendVerificationMail = {
-    email: string;
-    user_id: number;
-    return_url: string;
-}
-
-export const sendVerificationMail = createAsyncThunk<"", sendVerificationMail, {rejectValue: string}>(
+export const sendVerificationMail = createAsyncThunk<"", SendVerificationMail, {rejectValue: string}>(
  'user/getVerificationMail',
  async(data, {rejectWithValue}) => {
      try {
@@ -107,15 +67,6 @@ export const sendVerificationMail = createAsyncThunk<"", sendVerificationMail, {
    }
  }
 )
-
-export type VerificateMail = {
-    data: {
-        user_id: number;
-        token: string;
-    };
-    onSuccess: () => void;
-    onFailure: () => void;
-}
 
 export const verificateEmail = createAsyncThunk<"", VerificateMail, {rejectValue: string}>(
     'user/mailVerification',
@@ -135,17 +86,6 @@ export const verificateEmail = createAsyncThunk<"", VerificateMail, {rejectValue
     }
 )
 
-type UserInfoResponse = {
-    sub: number;
-    username: string;
-    iat: number;
-    exp: number;
-}
-
-type UserInfo = {
-    access_token: string;
-}
-
 export const getUserInfo = createAsyncThunk<UserInfoResponse, UserInfo, {rejectValue: string}>(
     'user/getUserInfo',
     async({access_token}, {rejectWithValue}) => {
@@ -161,17 +101,6 @@ export const getUserInfo = createAsyncThunk<UserInfoResponse, UserInfo, {rejectV
         }
     }
 )
-
-type UserState = {
-    name: string | null;
-    email: string | null;
-    profileImageUrl: string | null;
-    id: number | null;
-    access_token: string | null;
-    refresh_token: string | null;
-    status: string | null;
-    error: string | null;
-}
 
 const initialState: UserState = {
     name: null,

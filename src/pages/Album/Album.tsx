@@ -2,7 +2,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
-import {getTracksByAlbum, selectAlbum, Track} from "../../redux/music/music.ts";
+import {getTracksByAlbum, selectAlbum} from "../../redux/music/music.ts";
 import {useNavigate, useParams} from "react-router";
 
 export const Album = () => {

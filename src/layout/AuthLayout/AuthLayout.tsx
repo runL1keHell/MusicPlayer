@@ -12,7 +12,7 @@ export const AuthLayout: React.FC = () => {
                     <BiggerLogo width="135" height="180" className="cursor-pointer" />
                     <Musion width="196" height="52" className="cursor-pointer ml-[32px] mt-[70px]" />
                 </div>
-                <span className="mt-[50px] text-[#76CCFB] text-[36px]">
+                <span className="mt-[50px] max-h text-[#76CCFB] text-[36px]">
                     The ultimate destination of <br /> your music
                 </span>
             </header>

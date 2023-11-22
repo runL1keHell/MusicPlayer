@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
 import {useEffect} from "react";
-import {getArtistById, getTracksByAlbum, selectArtist} from "../../redux/music/music.ts";
+import {getArtistById, selectArtist} from "../../redux/music/music.ts";
 
 export const Artist = () => {
     const navigate = useNavigate();
