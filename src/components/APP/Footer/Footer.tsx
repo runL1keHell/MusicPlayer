@@ -8,7 +8,7 @@ export const Footer = ({menuVisible}: MenuStatus) => {
     const [isPlaying, setIsPlayng] = useState<boolean>(false);
     
     return (
-        <footer className={`h-[71px] pr-[42px] flex justify-between fixed right-0 bottom-0 rounded-[65px] border border-[#00000066] transition-all duration-300 ease-in-out
+        <footer className={`h-[71px] pr-[42px] bg-[#0F1E36] flex justify-between fixed right-0 bottom-0 rounded-[65px] border border-[#00000066] transition-all duration-300 ease-in-out
             ${menuVisible ? 'w-[76vw]' : 'w-[94.9%]' }
         `}>
             <div className="w-[72px] h-[72px] bg-cover bg-[url()] rounded-[72px] cursor-pointer"></div>

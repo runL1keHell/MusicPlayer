@@ -13,7 +13,7 @@ export const Header = ({menuVisible}: MenuStatus) => {
     const buttonStyle = 'w-[24px] h-[24px] cursor-pointer';
     const navigate = useNavigate();
     return (
-        <header className={`h-[81px] fixed z-10 top-0 right-0 shadow-md flex justify-evenly items-center cursor-pointer transition-all duration-300 ease-in-out' 
+        <header className={`h-[81px] fixed z-10 top-0 right-0 bg-[#0F1E36] shadow-2xl flex justify-evenly items-center cursor-pointer transition-all duration-300 ease-in-out' 
         ${menuVisible ?
         'w-[76%]  ' :  
         'w-[94.9%]' }`}

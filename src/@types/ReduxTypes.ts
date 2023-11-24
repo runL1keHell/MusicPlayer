@@ -76,13 +76,6 @@ export type UserState = {
     error: string | null;
 }
 
-export type GetAlbumsResponse = {
-    id: number;
-    name: string;
-    imageUrl: string;
-}[];
-
-
 export type Song = {
     id: number;
     name: string;
@@ -93,9 +86,9 @@ export type Song = {
     albumName: string;
 }
 
-export type Album = Song[];
+export type AlbumSongs = Song[];
 
-export type AlbumsByArtist = {
+export type Album = {
     id: number;
     name: string;
     imageUrl: string;
@@ -106,13 +99,13 @@ export type Artist = {
     name: string;
     profileImageUrl: string | null;
     description: string | null;
-    albums: AlbumsByArtist[];
+    albums: Album[];
 }
 
 
 export type MusicState = {
-    albums: GetAlbumsResponse | [];
-    currentAlbum: Album | null;
+    albums: Album[] | [];
+    currentAlbum: AlbumSongs | null;
     currentSong: Song | null;
     currentArtist: Artist | null;
 }

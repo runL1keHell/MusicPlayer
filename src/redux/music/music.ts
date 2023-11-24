@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 import axios, { AxiosError } from 'axios';
-import {Album, Artist, GetAlbumsResponse, MusicState} from "../../@types/ReduxTypes.ts";
+import {Album, AlbumSongs, Artist, MusicState} from "../../@types/ReduxTypes.ts";
 
-export const getAlbums = createAsyncThunk<GetAlbumsResponse, number, {rejectValue: string}>(
+export const getAlbums = createAsyncThunk<Album[], number, {rejectValue: string}>(
     'music/getAlbums',
     async(offset, { rejectWithValue }) => {
         try {
@@ -16,7 +16,7 @@ export const getAlbums = createAsyncThunk<GetAlbumsResponse, number, {rejectValu
     }
 );
 
-export const getAlbumById = createAsyncThunk<Album, number, {rejectValue: string}>(
+export const getAlbumById = createAsyncThunk<AlbumSongs, number, {rejectValue: string}>(
     'music/getAlbumById',
     async(albumId) => {
         try {
